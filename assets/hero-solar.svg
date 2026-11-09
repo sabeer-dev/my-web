@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2200 1200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Solar panel array at sunrise">
+  <defs>
+    <linearGradient id="h-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f3c31"/>
+      <stop offset="0.45" stop-color="#3c6352"/>
+      <stop offset="0.78" stop-color="#8a9c74"/>
+      <stop offset="1" stop-color="#c8cba0"/>
+    </linearGradient>
+    <radialGradient id="h-sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#f6edbe" stop-opacity=".95"/>
+      <stop offset="0.6" stop-color="#f0e3a6" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#f0e3a6" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="h-cells" width="52" height="38" patternUnits="userSpaceOnUse">
+      <rect width="52" height="38" fill="none" stroke="#5f8776" stroke-width="2.5"/>
+    </pattern>
+    <linearGradient id="h-ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b463a"/>
+      <stop offset="1" stop-color="#16281f"/>
+    </linearGradient>
+  </defs>
+  <rect width="2200" height="1200" fill="url(#h-sky)"/>
+  <circle cx="1630" cy="470" r="420" fill="url(#h-sun)"/>
+  <circle cx="1630" cy="470" r="112" fill="#f4ebc0" opacity=".9"/>
+  <path d="M0 880c340-60 620-20 900 30s560 40 820-10 480-40 480-40v340H0z" fill="url(#h-ground)"/>
+  <g transform="translate(1420 900) rotate(-7)">
+    <rect x="-520" y="-250" width="1040" height="500" rx="18" fill="#10231b"/>
+    <rect x="-492" y="-222" width="984" height="444" rx="8" fill="#25493a"/>
+    <rect x="-492" y="-222" width="984" height="444" rx="8" fill="url(#h-cells)"/>
+    <rect x="-520" y="-250" width="1040" height="500" rx="18" fill="none" stroke="#0b1a14" stroke-width="10"/>
+  </g>
+  <g transform="translate(700 1030) rotate(-4)" opacity=".85">
+    <rect x="-330" y="-160" width="660" height="320" rx="14" fill="#10231b"/>
+    <rect x="-312" y="-142" width="624" height="284" rx="6" fill="#234636"/>
+    <rect x="-312" y="-142" width="624" height="284" rx="6" fill="url(#h-cells)" opacity=".8"/>
+  </g>
+  <g fill="#16281f" opacity=".55">
+    <rect x="1560" y="1150" width="70" height="50"/>
+    <rect x="1040" y="1100" width="56" height="100"/>
+  </g>
+</svg>

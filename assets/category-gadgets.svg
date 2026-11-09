@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-label="Everyday electronics: phone and headphones">
+  <defs>
+    <linearGradient id="cg-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a5142"/>
+      <stop offset="1" stop-color="#14261e"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="560" fill="url(#cg-bg)"/>
+  <circle cx="180" cy="120" r="150" fill="#d7e8a2" opacity=".1"/>
+  <g>
+    <rect x="356" y="120" width="190" height="340" rx="26" fill="#3d6b58"/>
+    <rect x="356" y="120" width="190" height="340" rx="26" fill="none" stroke="#12281f" stroke-width="5"/>
+    <rect x="374" y="146" width="154" height="268" rx="12" fill="#cfe39a" opacity=".92"/>
+    <g fill="#284f40" opacity=".8">
+      <rect x="396" y="176" width="110" height="14" rx="7"/>
+      <rect x="396" y="206" width="80" height="10" rx="5"/>
+      <rect x="396" y="230" width="96" height="10" rx="5"/>
+      <rect x="396" y="262" width="110" height="70" rx="8" opacity=".35"/>
+    </g>
+    <rect x="430" y="430" width="42" height="10" rx="5" fill="#12281f" opacity=".5"/>
+  </g>
+  <g fill="none" stroke="#d7e8a2" stroke-width="16" stroke-linecap="round">
+    <path d="M636 214a96 96 0 0 0-96-74 96 96 0 0 0-40 8"/>
+    <path d="M232 300v-24a86 86 0 0 1 86-86"/>
+  </g>
+  <g fill="#d7e8a2">
+    <rect x="204" y="288" width="44" height="86" rx="20"/>
+    <rect x="600" y="212" width="44" height="86" rx="20" transform="rotate(8 622 255)"/>
+  </g>
+  <rect y="462" width="900" height="98" fill="#12281f" opacity=".5"/>
+</svg>

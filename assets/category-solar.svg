@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-label="Solar panels under a bright sun">
+  <defs>
+    <linearGradient id="cs-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#33604f"/>
+      <stop offset="1" stop-color="#1d3a2f"/>
+    </linearGradient>
+    <pattern id="cs-cells" width="46" height="34" patternUnits="userSpaceOnUse">
+      <rect width="46" height="34" fill="none" stroke="#6d957f" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="900" height="560" fill="url(#cs-bg)"/>
+  <circle cx="700" cy="140" r="86" fill="#d7e8a2" opacity=".28"/>
+  <circle cx="700" cy="140" r="52" fill="#e9eec2" opacity=".55"/>
+  <g transform="translate(450 400) rotate(-8)">
+    <rect x="-300" y="-140" width="600" height="280" rx="10" fill="#12281f"/>
+    <rect x="-284" y="-124" width="568" height="248" rx="4" fill="#25493a"/>
+    <rect x="-284" y="-124" width="568" height="248" rx="4" fill="url(#cs-cells)"/>
+  </g>
+  <g fill="#1a3227" opacity=".9">
+    <rect x="170" y="500" width="560" height="60"/>
+  </g>
+</svg>

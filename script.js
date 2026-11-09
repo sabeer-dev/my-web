@@ -9,7 +9,7 @@ const checkoutButton = document.querySelector(".checkout-button");
 const copyButton = document.querySelector(".copy-order");
 
 const ORDER_EMAIL = "shehuusmanumar176@gmail.com";
-const CART_KEY = "sabeer-bag-v1";
+const CART_KEY = "sabeer-solar-bag-v1";
 
 const cart = new Map();
 
@@ -120,9 +120,9 @@ function setQuantity(name, nextQuantity) {
 function buildOrderMessage() {
   const { items, itemCount, subtotal } = cartTotals();
   const lines = items.map((item) => `- ${item.name} x ${item.quantity} = ${formatMoney(item.price * item.quantity)}`);
-  const subject = `Order from sabeer. (${itemCount} ${itemCount === 1 ? "item" : "items"})`;
+  const subject = `Order from Sabeer Solar (${itemCount} ${itemCount === 1 ? "item" : "items"})`;
   const body = [
-    "Hi Sabeer,",
+    "Hi Sabeer Solar,",
     "",
     "I would like to order:",
     "",

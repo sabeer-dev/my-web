@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Rooftop solar installation at golden hour">
+  <defs>
+    <linearGradient id="s-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eef0d8"/>
+      <stop offset="1" stop-color="#d3dcc0"/>
+    </linearGradient>
+    <radialGradient id="s-sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#e8d68c" stop-opacity=".95"/>
+      <stop offset="1" stop-color="#e8d68c" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="s-cells" width="44" height="32" patternUnits="userSpaceOnUse">
+      <rect width="44" height="32" fill="none" stroke="#5d8574" stroke-width="2"/>
+    </pattern>
+    <linearGradient id="s-roof" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#45594c"/>
+      <stop offset="1" stop-color="#2b3a31"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#s-sky)"/>
+  <circle cx="930" cy="200" r="230" fill="url(#s-sun)"/>
+  <circle cx="930" cy="200" r="72" fill="#e9d998" opacity=".85"/>
+  <path d="M0 470 330 360l870 150v390H0z" fill="url(#s-roof)"/>
+  <g transform="translate(360 600) rotate(-6)">
+    <rect x="-180" y="-110" width="360" height="220" rx="8" fill="#12281f"/>
+    <rect x="-166" y="-96" width="332" height="192" rx="4" fill="#25493a"/>
+    <rect x="-166" y="-96" width="332" height="192" rx="4" fill="url(#s-cells)"/>
+  </g>
+  <g transform="translate(780 690) rotate(-6)">
+    <rect x="-200" y="-120" width="400" height="240" rx="8" fill="#12281f"/>
+    <rect x="-184" y="-104" width="368" height="208" rx="4" fill="#274d3d"/>
+    <rect x="-184" y="-104" width="368" height="208" rx="4" fill="url(#s-cells)"/>
+  </g>
+  <g transform="translate(180 760) rotate(-6)" opacity=".9">
+    <rect x="-160" y="-95" width="320" height="190" rx="8" fill="#12281f"/>
+    <rect x="-148" y="-83" width="296" height="166" rx="4" fill="#224434"/>
+    <rect x="-148" y="-83" width="296" height="166" rx="4" fill="url(#s-cells)" opacity=".9"/>
+  </g>
+  <g fill="#1d3a2f" opacity=".35">
+    <path d="M0 840h1200v60H0z"/>
+  </g>
+</svg>

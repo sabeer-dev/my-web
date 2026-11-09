@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="Deep-cycle solar battery illustration">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f2e8"/>
+      <stop offset="1" stop-color="#e3e3c9"/>
+    </linearGradient>
+    <linearGradient id="case" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3a6453"/>
+      <stop offset="0.45" stop-color="#487a66"/>
+      <stop offset="1" stop-color="#2a4b3e"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="800" fill="url(#bg3)"/>
+  <ellipse cx="400" cy="722" rx="190" ry="24" fill="#c8c9b4" opacity=".7"/>
+  <rect x="286" y="112" width="70" height="44" rx="10" fill="#c76c4c"/>
+  <rect x="444" y="112" width="70" height="44" rx="10" fill="#25352e"/>
+  <rect x="240" y="146" width="320" height="560" rx="22" fill="url(#case)"/>
+  <rect x="240" y="146" width="320" height="560" rx="22" fill="none" stroke="#1b372d" stroke-width="6"/>
+  <rect x="276" y="196" width="248" height="120" rx="12" fill="#e7ecd8"/>
+  <g fill="#284f40">
+    <rect x="300" y="224" width="120" height="16" rx="8"/>
+    <rect x="300" y="256" width="168" height="10" rx="5" opacity=".55"/>
+    <rect x="300" y="278" width="140" height="10" rx="5" opacity=".55"/>
+  </g>
+  <g>
+    <rect x="300" y="366" width="200" height="34" rx="8" fill="#d7e8a2"/>
+    <rect x="300" y="414" width="200" height="34" rx="8" fill="#d7e8a2" opacity=".8"/>
+    <rect x="300" y="462" width="200" height="34" rx="8" fill="#d7e8a2" opacity=".55"/>
+    <rect x="300" y="510" width="200" height="34" rx="8" fill="#0f241d" opacity=".35"/>
+  </g>
+  <path d="M470 596l-40 62h30l-20 52 58-78h-34l24-36z" fill="#284f40"/>
+  <g stroke="#1b372d" stroke-width="12" stroke-linecap="round">
+    <path d="M300 664h84"/>
+  </g>
+</svg>
