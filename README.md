@@ -1,20 +1,38 @@
-﻿# Sabeer Solar & Electronic Store
+# Sabeer Solar & Electronic Store
 
-Solar panels, hybrid inverters, deep-cycle batteries and everyday electronics — a static storefront built with plain HTML, CSS and JavaScript.
+The Next.js storefront is in [`web/`](./web/). It keeps the original storefront design and adds a persistent shopping bag, order checkout, order confirmation, and a password-protected order dashboard.
 
-**Live:** https://sabeer-dev.github.io/my-web/
+## Run locally
 
-## How it works
+Use Node.js 20.9 or later:
 
-- `index.html` — the whole storefront (hero, categories, products, story, cart dialog)
-- `styles.css` — layout, palette, product and category artwork hooks
-- `script.js` — cart state, quantity controls, email checkout
-- `assets/` — SVG product/hero illustrations and the 1200×630 social preview image
-- `.github/workflows/deploy.yml` — deploys to GitHub Pages on every push to `main`
+```powershell
+cd web
+npm install
+npm run dev
+```
 
-## Notes
+Open [http://localhost:3000](http://localhost:3000). Local development uses a SQLite database at `web/local.db` and seeds the sample products automatically.
 
-- The bag persists in `localStorage` under `sabeer-solar-bag-v1`.
-- "Checkout by email" opens the visitor's mail app with an itemised order addressed to the address in `ORDER_EMAIL` (`script.js`). There is no payment backend.
-- To change the order address, update `ORDER_EMAIL` in `script.js` and the `mailto:` links in `index.html`.
-- Asset URLs are versioned (`styles.css?v=...`) to avoid stale files after a deploy — bump the version when you change CSS or JS.
+To type-check or create a production build:
+
+```powershell
+cd web
+npm run typecheck
+npm run build
+npm start
+```
+
+## Environment
+
+For production, configure `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, and `ADMIN_PASSWORD` in the hosting provider's environment settings. See [`web/.env.example`](./web/.env.example) for the variable names. Do not commit `.env.local` or production credentials.
+
+The Next.js app requires a Node.js-compatible host; GitHub Pages cannot run its order API or admin dashboard. The existing [GitHub Pages workflow](./.github/workflows/deploy.yml) still publishes the original static files at the repository root.
+
+## Source and assets
+
+- [`web/app/`](./web/app/) — App Router pages, API routes, and shared layout
+- [`web/components/`](./web/components/) — navigation, product grid, cart, checkout, and admin UI
+- [`web/lib/`](./web/lib/) — database, product, order, and validation helpers
+- [`web/public/assets/`](./web/public/assets/) — storefront artwork and social preview image
+- `index.html`, `styles.css`, `script.js`, and `assets/` — original static site, retained for the existing GitHub Pages deployment
