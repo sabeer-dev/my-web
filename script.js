@@ -71,8 +71,8 @@ function cartTotals() {
 function renderCart() {
   const { items, itemCount, subtotal } = cartTotals();
 
-  bagCount.textContent = String(itemCount);
-  bagButton.setAttribute("aria-label", `Shopping bag, ${itemCount} ${itemCount === 1 ? "item" : "items"}`);
+  if (bagCount) bagCount.textContent = String(itemCount);
+  if (bagButton) bagButton.setAttribute("aria-label", `Shopping bag, ${itemCount} ${itemCount === 1 ? "item" : "items"}`);
   cartTotal.textContent = formatMoney(subtotal);
 
   const hasItems = items.length > 0;
@@ -185,7 +185,7 @@ cartItems.addEventListener("click", (event) => {
   if (control.dataset.action === "remove") setQuantity(name, 0);
 });
 
-bagButton.addEventListener("click", () => cartDialog.showModal());
+bagButton?.addEventListener("click", () => cartDialog.showModal());
 document.querySelector(".cart-close").addEventListener("click", () => cartDialog.close());
 cartDialog.addEventListener("click", (event) => {
   if (event.target === cartDialog) cartDialog.close();

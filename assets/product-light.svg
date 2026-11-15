@@ -1,38 +1,66 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="Solar LED floodlight illustration">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="Solar LED floodlight casting a blue-white beam">
   <defs>
-    <linearGradient id="bg4" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f4f2e8"/>
-      <stop offset="1" stop-color="#e5e7cc"/>
+    <radialGradient id="pl-bg" cx=".5" cy=".12" r=".95">
+      <stop offset="0" stop-color="#1758b4"/>
+      <stop offset=".46" stop-color="#082a60"/>
+      <stop offset="1" stop-color="#031025"/>
+    </radialGradient>
+    <linearGradient id="pl-beam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d7f8ff" stop-opacity=".75"/>
+      <stop offset="1" stop-color="#5cc8ff" stop-opacity="0"/>
     </linearGradient>
-    <linearGradient id="beam" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0" stop-color="#f3e6a8" stop-opacity=".85"/>
-      <stop offset="1" stop-color="#f3e6a8" stop-opacity="0"/>
+    <linearGradient id="pl-frame" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#123a78"/>
+      <stop offset=".55" stop-color="#0a2350"/>
+      <stop offset="1" stop-color="#06152f"/>
     </linearGradient>
-    <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#3b6453"/>
-      <stop offset="1" stop-color="#223f34"/>
+    <linearGradient id="pl-panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4aa8ff"/>
+      <stop offset=".5" stop-color="#0b3a86"/>
+      <stop offset="1" stop-color="#082a60"/>
     </linearGradient>
+    <filter id="pl-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="22" stdDeviation="22" flood-color="#020b1c" flood-opacity=".6"/>
+    </filter>
   </defs>
-  <rect width="800" height="800" fill="url(#bg4)"/>
-  <path d="M210 640L360 360l230 40L430 700z" fill="url(#beam)"/>
-  <rect x="150" y="120" width="500" height="120" rx="14" fill="#c9cbb8" opacity=".45"/>
-  <g transform="translate(320 250) rotate(-12)">
-    <rect x="0" y="0" width="300" height="300" rx="26" fill="url(#frame)"/>
-    <rect x="26" y="26" width="248" height="248" rx="14" fill="#edf2d8"/>
-    <g fill="#c9d9a4">
-      <circle cx="92" cy="92" r="26"/>
-      <circle cx="158" cy="92" r="26"/>
-      <circle cx="224" cy="92" r="26"/>
-      <circle cx="92" cy="158" r="26"/>
-      <circle cx="158" cy="158" r="26"/>
-      <circle cx="224" cy="158" r="26"/>
-      <circle cx="92" cy="224" r="26"/>
-      <circle cx="158" cy="224" r="26"/>
-      <circle cx="224" cy="224" r="26"/>
+
+  <rect width="800" height="800" fill="url(#pl-bg)"/>
+  <g fill="#c9f4ff">
+    <circle cx="150" cy="180" r="2.3" opacity=".55"/>
+    <circle cx="646" cy="120" r="1.9" opacity=".5"/>
+    <circle cx="700" cy="420" r="1.6" opacity=".4"/>
+    <circle cx="108" cy="430" r="1.5" opacity=".4"/>
+  </g>
+
+  <path d="M236 640 352 336l242 62-142 330z" fill="url(#pl-beam)" opacity=".8"/>
+
+  <g filter="url(#pl-shadow)">
+    <rect x="292" y="150" width="216" height="96" rx="12" fill="url(#pl-panel)" transform="rotate(-6 400 198)"/>
+    <g stroke="#8fd6ff" stroke-opacity=".35" stroke-width="2" transform="rotate(-6 400 198)">
+      <path d="M292 182h216M292 214h216M364 150v96M436 150v96"/>
+    </g>
+
+    <g transform="translate(334 306) rotate(-10)">
+      <rect x="0" y="0" width="286" height="286" rx="28" fill="url(#pl-frame)"/>
+      <rect x="0" y="0" width="286" height="286" rx="28" fill="none" stroke="#4aa8ff" stroke-opacity=".5" stroke-width="3"/>
+      <rect x="24" y="24" width="238" height="238" rx="16" fill="#e8faff"/>
+      <g fill="#8fe8ff">
+        <circle cx="88" cy="88" r="25"/><circle cx="150" cy="88" r="25"/><circle cx="212" cy="88" r="25"/>
+        <circle cx="88" cy="150" r="25"/><circle cx="150" cy="150" r="25"/><circle cx="212" cy="150" r="25"/>
+        <circle cx="88" cy="212" r="25"/><circle cx="150" cy="212" r="25"/><circle cx="212" cy="212" r="25"/>
+      </g>
+      <g fill="#2d86ff" opacity=".55">
+        <circle cx="88" cy="88" r="11"/><circle cx="150" cy="88" r="11"/><circle cx="212" cy="88" r="11"/>
+        <circle cx="88" cy="150" r="11"/><circle cx="150" cy="150" r="11"/><circle cx="212" cy="150" r="11"/>
+        <circle cx="88" cy="212" r="11"/><circle cx="150" cy="212" r="11"/><circle cx="212" cy="212" r="11"/>
+      </g>
+    </g>
+
+    <g stroke="#4aa8ff" stroke-opacity=".5" stroke-width="12" stroke-linecap="round" fill="none">
+      <path d="M548 468 650 610"/>
     </g>
   </g>
-  <g stroke="#2b4a3e" stroke-width="16" stroke-linecap="round" fill="none">
-    <path d="M560 470l120 130"/>
-  </g>
-  <circle cx="250" cy="180" r="46" fill="#e6d58c" opacity=".5"/>
+
+  <circle cx="256" cy="196" r="44" fill="#8fe8ff" opacity=".22"/>
+  <circle cx="256" cy="196" r="22" fill="#dff7ff" opacity=".45"/>
 </svg>
