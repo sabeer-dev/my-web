@@ -328,5 +328,13 @@
   if (hasFilterParams || window.location.hash === "#prices") {
     window.requestAnimationFrame(scrollToPrices);
     window.setTimeout(scrollToPrices, 420);
+    window.setTimeout(scrollToPrices, 1200);
+    window.setTimeout(scrollToPrices, 2400);
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(scrollToPrices).catch(() => {});
+    }
+
+    window.addEventListener("load", scrollToPrices, { once: true });
   }
 })();

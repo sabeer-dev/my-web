@@ -69,10 +69,24 @@ export function PriceBoard() {
     // Deep links filter the board after hydration, so align the section again
     // once the final row count is in the DOM.
     if (initialQuery || hasMarket || hasCategory || window.location.hash === "#prices") {
-      // The browser can restore scroll after a same-path navigation, so align
-      // the board a few times while the filtered layout settles.
-      const timers = [90, 450, 950].map((delay) => window.setTimeout(scrollToPriceSection, delay));
-      return () => timers.forEach((timer) => window.clearTimeout(timer));
+      // The browser can restore scroll after a same-path navigation and late
+      // font loading can move the board, so keep it aligned while layout settles.
+      let cancelled = false;
+      const align = () => {
+        if (!cancelled) scrollToPriceSection();
+      };
+      const timers = [90, 450, 1200, 2400].map((delay) => window.setTimeout(align, delay));
+
+      if (document.fonts) {
+        document.fonts.ready.then(align).catch(() => {});
+      }
+      window.addEventListener("load", align, { once: true });
+
+      return () => {
+        cancelled = true;
+        timers.forEach((timer) => window.clearTimeout(timer));
+        window.removeEventListener("load", align);
+      };
     }
   }, []);
 
