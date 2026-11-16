@@ -2,18 +2,17 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useCart } from "./CartProvider";
+import { MarketMark } from "./MarketMark";
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { count, openCart } = useCart();
 
   return (
     <header className="site-header">
-      <Link className="wordmark" href="/" aria-label="Sabeer Solar and Electronic Store home">
-        <span className="wordmark-icon" aria-hidden="true">S</span>
-        <span>sabeer<span className="wordmark-period">.</span></span>
-        <span className="wordmark-sub">Solar</span>
+      <Link className="wordmark" href="/" aria-label="Sabeer Market home">
+        <MarketMark />
+        <span className="wordmark-text">sabeer<span className="wordmark-period">.</span></span>
+        <span className="wordmark-sub">Food price tracker</span>
       </Link>
 
       <button
@@ -27,22 +26,21 @@ export function SiteHeader() {
         <span /><span />
       </button>
 
-      <nav className={`site-nav${menuOpen ? " is-open" : ""}`} id="site-nav" aria-label="Main navigation" onClick={() => setMenuOpen(false)}>
-        <Link href="/#shop">Shop all</Link>
-        <Link href="/#categories">Categories</Link>
-        <Link href="/#story">Our story</Link>
+      <nav
+        className={`site-nav${menuOpen ? " is-open" : ""}`}
+        id="site-nav"
+        aria-label="Main navigation"
+        onClick={() => setMenuOpen(false)}
+      >
+        <Link href="/#prices">Prices</Link>
+        <Link href="/#markets">Markets</Link>
+        <Link href="/#how">How it works</Link>
+        <a className="nav-alert" href="mailto:shehuusmanumar176@gmail.com?subject=Free%20market%20price%20alert">Set an alert ↗</a>
       </nav>
 
-      <button
-        className="bag-button"
-        type="button"
-        aria-label={`Shopping bag, ${count} ${count === 1 ? "item" : "items"}`}
-        aria-haspopup="dialog"
-        aria-controls="cart-dialog"
-        onClick={openCart}
-      >
-        Bag <span className="bag-count" aria-hidden="true">{count}</span>
-      </button>
+      <a className="button button-primary button-small header-cta" href="mailto:shehuusmanumar176@gmail.com?subject=Free%20market%20price%20alert">
+        Set an alert ↗
+      </a>
     </header>
   );
 }

@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="A carton of eggs, a fresh fish and a lime on a market table">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8efdf"/>
+      <stop offset=".5" stop-color="#f2ecdd"/>
+      <stop offset="1" stop-color="#dfe9d6"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".42" r=".6">
+      <stop offset="0" stop-color="#fffbf3"/>
+      <stop offset="1" stop-color="#fffbf3" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="carton" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e7d3ad"/>
+      <stop offset="1" stop-color="#b89561"/>
+    </linearGradient>
+    <linearGradient id="egg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffdf6"/>
+      <stop offset=".6" stop-color="#f5e7cf"/>
+      <stop offset="1" stop-color="#dcc39c"/>
+    </linearGradient>
+    <linearGradient id="fish" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a8d5d6"/>
+      <stop offset=".5" stop-color="#6aaab1"/>
+      <stop offset="1" stop-color="#3f7484"/>
+    </linearGradient>
+    <linearGradient id="fishBelly" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d8eeee"/>
+      <stop offset="1" stop-color="#8fc2c6"/>
+    </linearGradient>
+    <linearGradient id="board" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d9aa6e"/>
+      <stop offset="1" stop-color="#9c6334"/>
+    </linearGradient>
+    <linearGradient id="lime" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d8f77e"/>
+      <stop offset="1" stop-color="#5c9d2f"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <rect width="800" height="600" fill="url(#glow)"/>
+  <circle cx="400" cy="324" r="238" fill="#fffaf0" opacity=".5"/>
+  <ellipse cx="400" cy="522" rx="306" ry="34" fill="#8a9478" opacity=".18"/>
+
+  <g>
+    <path d="M122 468h556l38 62H84l38-62Z" fill="url(#board)"/>
+    <path d="M122 468h556l-12 18H134l-12-18Z" fill="#ecc084"/>
+    <path d="M202 486v44M302 486v44M402 486v44M502 486v44M602 486v44" stroke="#7a4a25" stroke-width="6" opacity=".3"/>
+  </g>
+
+  <g transform="rotate(-7 320 360)">
+    <path d="M180 350h280l-18 102H198l-18-102Z" fill="url(#carton)"/>
+    <path d="M192 350h256l-12 24H204l-12-24Z" fill="#f0dfbd"/>
+    <g fill="#8d6b3e" opacity=".68">
+      <ellipse cx="240" cy="368" rx="32" ry="15"/>
+      <ellipse cx="312" cy="368" rx="32" ry="15"/>
+      <ellipse cx="384" cy="368" rx="32" ry="15"/>
+      <ellipse cx="276" cy="398" rx="32" ry="15"/>
+      <ellipse cx="348" cy="398" rx="32" ry="15"/>
+      <ellipse cx="420" cy="398" rx="32" ry="15"/>
+    </g>
+    <g fill="url(#egg)">
+      <ellipse cx="240" cy="356" rx="30" ry="38"/>
+      <ellipse cx="312" cy="356" rx="30" ry="38"/>
+      <ellipse cx="384" cy="356" rx="30" ry="38"/>
+      <ellipse cx="276" cy="390" rx="30" ry="38"/>
+      <ellipse cx="348" cy="390" rx="30" ry="38"/>
+      <ellipse cx="420" cy="390" rx="30" ry="38"/>
+    </g>
+    <g fill="#fff" opacity=".5">
+      <ellipse cx="230" cy="342" rx="8" ry="12" transform="rotate(-18 230 342)"/>
+      <ellipse cx="302" cy="342" rx="8" ry="12" transform="rotate(-18 302 342)"/>
+      <ellipse cx="374" cy="342" rx="8" ry="12" transform="rotate(-18 374 342)"/>
+    </g>
+  </g>
+
+  <g transform="rotate(-13 600 390)">
+    <path d="M490 388c34-52 104-62 156-20 18 14 30 32 38 52-44 24-94 26-140 8-24-10-44-24-54-40Z" fill="url(#fish)"/>
+    <path d="M518 404c36-28 86-32 126-10-34 24-88 30-126 10Z" fill="url(#fishBelly)" opacity=".8"/>
+    <path d="M684 420c22-8 42-4 54 12-18 10-38 10-54-12Z" fill="#5b99a2"/>
+    <path d="M684 420c22-8 42-4 54 12" stroke="#2f5967" stroke-width="3" fill="none" opacity=".5"/>
+    <circle cx="532" cy="394" r="7" fill="#173e48"/>
+    <circle cx="534" cy="392" r="2.5" fill="#dff6f4"/>
+    <g stroke="#356b77" stroke-width="4" stroke-linecap="round" opacity=".55">
+      <path d="M568 366c-4 20 4 32 18 38"/>
+      <path d="M604 360c-4 22 4 36 20 42"/>
+      <path d="M640 364c-2 20 6 32 20 38"/>
+    </g>
+    <path d="M582 446c18 18 42 26 68 24-12-18-34-28-68-24Z" fill="#4f8a94"/>
+  </g>
+
+  <g>
+    <circle cx="196" cy="432" r="42" fill="url(#lime)"/>
+    <path d="M196 390c-2-16 8-28 22-30" stroke="#3f7a22" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <path d="M166 424c18-10 40-10 58 0" stroke="#d8f77e" stroke-width="4" fill="none" opacity=".55"/>
+    <path d="M172 446c16 10 36 10 52 0" stroke="#3f7a22" stroke-width="3" fill="none" opacity=".35"/>
+  </g>
+
+  <g opacity=".75">
+    <path d="M660 300c-10-48-44-74-86-70 6 46 38 78 86 70Z" fill="#5c9d2f" opacity=".55"/>
+    <path d="M110 330c20-46 56-64 94-56-10 42-44 68-94 56Z" fill="#8dbd57" opacity=".55"/>
+  </g>
+
+  <g fill="#fffaf0" opacity=".65">
+    <circle cx="120" cy="164" r="3"/><circle cx="180" cy="220" r="2"/><circle cx="660" cy="150" r="2.5"/>
+    <circle cx="704" cy="232" r="2"/><circle cx="262" cy="132" r="2"/><circle cx="530" cy="168" r="2.5"/>
+  </g>
+</svg>

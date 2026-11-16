@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="A bottle of golden cooking oil with garlic, chillies and a bowl of spices">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8efdc"/>
+      <stop offset=".5" stop-color="#f1eedb"/>
+      <stop offset="1" stop-color="#dce9d1"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".48" cy=".4" r=".6">
+      <stop offset="0" stop-color="#fffbf2"/>
+      <stop offset="1" stop-color="#fffbf2" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="oil" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffe9a3"/>
+      <stop offset=".5" stop-color="#f2b83c"/>
+      <stop offset="1" stop-color="#c77d17"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff7d9" stop-opacity=".9"/>
+      <stop offset=".35" stop-color="#fffdf2" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#b8791f" stop-opacity=".3"/>
+    </linearGradient>
+    <linearGradient id="garlic" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffdf4"/>
+      <stop offset=".6" stop-color="#f3e7d2"/>
+      <stop offset="1" stop-color="#d6c1a3"/>
+    </linearGradient>
+    <linearGradient id="chilli" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f47a52"/>
+      <stop offset="1" stop-color="#b22b26"/>
+    </linearGradient>
+    <linearGradient id="bowl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cf9258"/>
+      <stop offset="1" stop-color="#8c572d"/>
+    </linearGradient>
+    <linearGradient id="spice" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f2a93b"/>
+      <stop offset="1" stop-color="#c25c24"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <rect width="800" height="600" fill="url(#glow)"/>
+  <circle cx="400" cy="324" r="238" fill="#fffaf0" opacity=".5"/>
+  <ellipse cx="400" cy="522" rx="306" ry="34" fill="#8a9478" opacity=".18"/>
+
+  <g>
+    <path d="M128 476h544l38 54H90l38-54Z" fill="#c0884d"/>
+    <path d="M128 476h544l-12 18H140l-12-18Z" fill="#e5b77b"/>
+    <path d="M208 494v36M308 494v36M408 494v36M508 494v36M608 494v36" stroke="#7a4a25" stroke-width="6" opacity=".28"/>
+  </g>
+
+  <g transform="rotate(-4 358 330)">
+    <path d="M320 180h76v58c0 18 10 28 24 44 16 18 24 38 24 62v172H272V344c0-24 8-44 24-62 14-16 24-26 24-44v-58Z" fill="url(#oil)"/>
+    <path d="M320 180h76v58c0 18 10 28 24 44 16 18 24 38 24 62v172H272V344c0-24 8-44 24-62 14-16 24-26 24-44v-58Z" fill="url(#glass)"/>
+    <rect x="310" y="154" width="96" height="38" rx="10" fill="#1c5b3d"/>
+    <rect x="322" y="164" width="72" height="8" rx="4" fill="#b9f36a" opacity=".45"/>
+    <rect x="288" y="320" width="140" height="132" rx="12" fill="#fbf7ec" opacity=".92"/>
+    <path d="M308 350h100" stroke="#167a4a" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+    <path d="M308 368h74" stroke="#167a4a" stroke-width="4" stroke-linecap="round" opacity=".45"/>
+    <circle cx="358" cy="414" r="20" fill="#f2a93b"/>
+    <path d="M344 414c8-12 20-12 28 0-8 12-20 12-28 0Z" fill="#167a4a" opacity=".7"/>
+    <path d="M300 216c-10 20-12 38-10 56" stroke="#fffdf2" stroke-width="8" stroke-linecap="round" opacity=".45" fill="none"/>
+  </g>
+
+  <g>
+    <ellipse cx="558" cy="468" rx="106" ry="24" fill="#7f6b4a" opacity=".2"/>
+    <path d="M470 402h176c-8 50-40 84-88 84s-80-34-88-84Z" fill="url(#bowl)"/>
+    <ellipse cx="558" cy="402" rx="88" ry="24" fill="#e0a765"/>
+    <ellipse cx="558" cy="400" rx="76" ry="17" fill="url(#spice)"/>
+    <g fill="#8a3e15" opacity=".45">
+      <circle cx="530" cy="398" r="3"/><circle cx="548" cy="392" r="2.5"/><circle cx="568" cy="400" r="3"/>
+      <circle cx="586" cy="394" r="2.5"/><circle cx="552" cy="406" r="2"/><circle cx="578" cy="408" r="2"/>
+    </g>
+  </g>
+
+  <g transform="rotate(14 182 430)">
+    <ellipse cx="182" cy="432" rx="48" ry="58" fill="url(#garlic)"/>
+    <path d="M182 374c-8-30 0-48 14-56" stroke="#b6a283" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <path d="M162 410c14-18 34-18 48 0" stroke="#cbb896" stroke-width="4" fill="none" opacity=".65"/>
+    <path d="M156 444c18 14 40 14 58 0" stroke="#cbb896" stroke-width="4" fill="none" opacity=".5"/>
+  </g>
+
+  <g>
+    <path d="M640 330c40-18 76-4 88 26-34 24-72 18-88-26Z" fill="url(#chilli)"/>
+    <path d="M654 340c24-8 44-2 56 12-22 12-44 8-56-12Z" fill="#f47a52" opacity=".55"/>
+    <path d="M636 324c10-14 24-18 38-12" stroke="#167a4a" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <path d="M636 398c30-24 66-20 86 8-28 28-68 26-86-8Z" fill="url(#chilli)" opacity=".92"/>
+    <path d="M646 402c22-10 42-6 56 8-18 14-42 10-56-8Z" fill="#f47a52" opacity=".5"/>
+    <path d="M634 390c10-12 24-16 36-12" stroke="#167a4a" stroke-width="8" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <g opacity=".72">
+    <path d="M108 330c22-50 62-70 104-58-12 46-50 72-104 58Z" fill="#8dbd57"/>
+    <path d="M706 446c-8-40-38-62-76-56 4 38 32 64 76 56Z" fill="#8dbd57" opacity=".65"/>
+  </g>
+
+  <g fill="#fffaf0" opacity=".65">
+    <circle cx="126" cy="164" r="3"/><circle cx="184" cy="218" r="2"/><circle cx="664" cy="152" r="2.5"/>
+    <circle cx="708" cy="232" r="2"/><circle cx="270" cy="132" r="2"/><circle cx="536" cy="164" r="2.5"/>
+  </g>
+</svg>
