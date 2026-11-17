@@ -25,7 +25,7 @@ export default function HomePage() {
         <div className="hero-inner">
           <div className="hero-content">
             <p className="eyebrow hero-eyebrow"><span className="pulse" aria-hidden="true" />Live food market prices · Updated this morning</p>
-            <h1 id="hero-title">Know the price<br />before you <em>leave home.</em></h1>
+            <h1 id="hero-title">Know the price<br /> before you <em>leave home.</em></h1>
             <p className="hero-copy">Track rice, beans, tomatoes, onions, proteins and cooking essentials across Nigeria&apos;s busiest markets. One calm place to plan your week — and spot a fair price when you see one.</p>
             <HeroSearch />
             <div className="hero-actions">
