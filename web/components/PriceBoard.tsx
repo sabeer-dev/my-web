@@ -221,7 +221,15 @@ export function PriceBoard() {
                 <tr key={item.id}>
                   <td className="price-item-cell">
                     <div className="price-item">
-                      <span className={`price-dot price-dot--${CATEGORY_KEYS[item.category]}`} aria-hidden="true" />
+                      <img
+                        className="price-thumb"
+                        src={`/assets/items/${item.id}.webp`}
+                        alt=""
+                        width={42}
+                        height={42}
+                        loading="lazy"
+                        decoding="async"
+                      />
                       <span><strong>{item.name}</strong><small>{item.category}</small></span>
                     </div>
                   </td>

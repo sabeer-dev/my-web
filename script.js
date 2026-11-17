@@ -131,13 +131,12 @@
 
     priceRows.innerHTML = items.map((item) => {
       const tracked = watchlist.has(item.id);
-      const categoryClass = `price-dot--${CATEGORY_KEYS[item.category]}`;
       const trackLabel = tracked ? `Stop tracking ${item.name}` : `Track ${item.name}`;
       return `
         <tr>
           <td class="price-item-cell">
             <div class="price-item">
-              <span class="price-dot ${categoryClass}" aria-hidden="true"></span>
+              <img class="price-thumb" src="assets/items/${escapeHtml(item.id)}.webp" alt="" width="42" height="42" loading="lazy" decoding="async">
               <span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.category)}</small></span>
             </div>
           </td>

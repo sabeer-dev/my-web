@@ -39,6 +39,7 @@ export function SiteFooter() {
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Sabeer Market</span>
         <span>Prices checked every morning. Always confirm at the stall.</span>
+        <span>Photos: <Link className="footer-credit" href="/credits">Pexels &amp; Wikimedia Commons</Link></span>
         <Link className="back-top" href="/#home">Back to top ↑</Link>
       </div>
     </footer>

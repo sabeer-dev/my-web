@@ -17,8 +17,6 @@ const markets = [
   { slug: "ibadan", name: "Ibadan", detail: "Bodija · Oja'ba" }
 ];
 
-const panelBars = [28, 38, 34, 49, 57, 51, 68, 82, 73, 62, 90, 96];
-
 export default function HomePage() {
   return (
     <main>
@@ -34,26 +32,7 @@ export default function HomePage() {
               <a className="button button-primary" href="#prices">Browse today&apos;s prices <span aria-hidden="true">↘</span></a>
               <a className="button button-ghost" href="mailto:shehuusmanumar176@gmail.com?subject=Free%20market%20price%20alert">Set a free alert</a>
             </div>
-            <dl className="hero-stats">
-              <div><dt>24</dt><dd>Markets tracked</dd></div>
-              <div><dt>180+</dt><dd>Everyday items</dd></div>
-              <div><dt>7:00</dt><dd>Daily price check</dd></div>
-            </dl>
           </div>
-
-          <aside className="hero-panel" aria-label="Today's market board">
-            <div className="panel-top"><span className="panel-live"><i aria-hidden="true" />Live board</span><span>Updated 7:00 AM</span></div>
-            <p className="panel-label">Tomatoes · big basket</p>
-            <p className="panel-value">₦32,000 <span>Lagos · up 8.6% this week</span></p>
-            <div className="panel-bars" aria-hidden="true">
-              {panelBars.map((height, index) => <span key={index} style={{ height: `${height}%` }} />)}
-            </div>
-            <ul className="panel-list">
-              <li><span>Rice · 50kg</span><strong>₦78,000 <em className="up">↑ 2.4%</em></strong></li>
-              <li><span>Beans · 50kg</span><strong>₦65,000 <em className="down">↓ 1.2%</em></strong></li>
-              <li><span>Eggs · crate</span><strong>₦5,200 <em className="flat">→ 0.0%</em></strong></li>
-            </ul>
-          </aside>
         </div>
         <div className="hero-caption"><span>RICE ₦78,000 ↑ · TOMATOES ₦32,000 ↑ · BEANS ₦65,000 ↓ · ONIONS ₦45,000 ↓ · EGGS ₦5,200 →</span><span>HONEST PRICES · REAL MARKETS · EVERY MORNING</span></div>
       </section>
@@ -158,7 +137,7 @@ export default function HomePage() {
 
       <section className="story" id="story">
         <div className="story-visual">
-          <div className="story-photo" role="img" aria-label="A basket of tomatoes, peppers and onions beside a phone showing live food prices and a shopping notebook" />
+          <div className="story-photo" role="img" aria-label="A smiling vendor arranging fresh produce at an Abuja food market" />
           <div className="story-badge"><strong>24</strong><span>markets checked daily</span></div>
         </div>
         <div className="story-copy">

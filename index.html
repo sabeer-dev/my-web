@@ -13,19 +13,21 @@
     <meta property="og:title" content="Sabeer Market — Food prices you can plan around">
     <meta property="og:description" content="Live food market prices for rice, beans, tomatoes, onions, proteins and cooking essentials. Checked every morning across 24 Nigerian markets.">
     <meta property="og:url" content="https://sabeer-dev.github.io/my-web/">
-    <meta property="og:image" content="https://sabeer-dev.github.io/my-web/assets/og-cover.png">
+    <meta property="og:image" content="https://sabeer-dev.github.io/my-web/assets/og-cover.jpg">
+    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Sabeer Market — know the price before you leave home.">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Sabeer Market — Food prices you can plan around">
     <meta name="twitter:description" content="Live food market prices for rice, beans, tomatoes, onions, proteins and cooking essentials. Checked every morning across 24 Nigerian markets.">
-    <meta name="twitter:image" content="https://sabeer-dev.github.io/my-web/assets/og-cover.png">
+    <meta name="twitter:image" content="https://sabeer-dev.github.io/my-web/assets/og-cover.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20261116-5">
-    <script src="script.js?v=20261116-5" defer></script>
+    <link rel="preload" as="image" href="assets/hero-market.webp" type="image/webp">
+    <link rel="stylesheet" href="styles.css?v=20261117-3">
+    <script src="script.js?v=20261117-3" defer></script>
   </head>
   <body>
     <div class="announcement">
@@ -78,29 +80,7 @@
               <a class="button button-primary" href="#prices">Browse today's prices <span aria-hidden="true">↘</span></a>
               <a class="button button-ghost" href="mailto:shehuusmanumar176@gmail.com?subject=Free%20market%20price%20alert">Set a free alert</a>
             </div>
-            <dl class="hero-stats">
-              <div><dt>24</dt><dd>Markets tracked</dd></div>
-              <div><dt>180+</dt><dd>Everyday items</dd></div>
-              <div><dt>7:00</dt><dd>Daily price check</dd></div>
-            </dl>
           </div>
-
-          <aside class="hero-panel" aria-label="Today's market board">
-            <div class="panel-top"><span class="panel-live"><i aria-hidden="true"></i>Live board</span><span>Updated 7:00 AM</span></div>
-            <p class="panel-label">Tomatoes · big basket</p>
-            <p class="panel-value">₦32,000 <span>Lagos · up 8.6% this week</span></p>
-            <div class="panel-bars" aria-hidden="true">
-              <span style="height:28%"></span><span style="height:38%"></span><span style="height:34%"></span>
-              <span style="height:49%"></span><span style="height:57%"></span><span style="height:51%"></span>
-              <span style="height:68%"></span><span style="height:82%"></span><span style="height:73%"></span>
-              <span style="height:62%"></span><span style="height:90%"></span><span style="height:96%"></span>
-            </div>
-            <ul class="panel-list">
-              <li><span>Rice · 50kg</span><strong>₦78,000 <em class="up">↑ 2.4%</em></strong></li>
-              <li><span>Beans · 50kg</span><strong>₦65,000 <em class="down">↓ 1.2%</em></strong></li>
-              <li><span>Eggs · crate</span><strong>₦5,200 <em class="flat">→ 0.0%</em></strong></li>
-            </ul>
-          </aside>
         </div>
         <div class="hero-caption"><span>RICE ₦78,000 ↑ · TOMATOES ₦32,000 ↑ · BEANS ₦65,000 ↓ · ONIONS ₦45,000 ↓ · EGGS ₦5,200 →</span><span>HONEST PRICES · REAL MARKETS · EVERY MORNING</span></div>
       </section>
@@ -262,7 +242,7 @@
 
       <section class="story" id="story">
         <div class="story-visual">
-          <div class="story-photo" role="img" aria-label="A basket of tomatoes, peppers and onions beside a phone showing live food prices and a shopping notebook"></div>
+          <div class="story-photo" role="img" aria-label="A smiling vendor arranging fresh produce at an Abuja food market"></div>
           <div class="story-badge"><strong>24</strong><span>markets checked daily</span></div>
         </div>
         <div class="story-copy">
@@ -332,6 +312,7 @@
       <div class="footer-bottom">
         <span>© <span id="year"></span> Sabeer Market</span>
         <span>Prices checked every morning. Always confirm at the stall.</span>
+        <span>Photos: <a class="footer-credit" href="credits.html">Pexels &amp; Wikimedia Commons</a></span>
         <a class="back-top" href="#home">Back to top ↑</a>
       </div>
     </footer>
