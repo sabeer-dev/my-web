@@ -56,7 +56,8 @@ food prices and markets. It is backed by Supabase.
 
 The public Next.js page reads live prices from Supabase and falls back to the
 built-in data if Supabase is unavailable. The static GitHub Pages site reads
-the same tables through `supabase-config.js` using the publishable key.
+the same tables through `supabase-config.js` using the publishable key. Run
+`npm run static-config` in `web/` after changing the Supabase URL or key.
 
 Deploy the admin app to Vercel with the repository root set to `web`. GitHub
 Pages only hosts the static site and cannot run the authenticated admin page.

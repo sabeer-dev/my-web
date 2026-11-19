@@ -23,7 +23,9 @@ npm run start
 1. Open your project's **SQL Editor** in the Supabase dashboard.
 2. Run [`supabase/schema.sql`](./supabase/schema.sql). It creates the
    `markets` and `price_items` tables, row-level security policies, and the
-   starting six markets and 12 items.
+   starting six markets and 12 items. It also reloads the PostgREST schema
+   cache. Use [`supabase/verify.sql`](./supabase/verify.sql) to confirm the
+   tables, seed counts and admin role.
 3. Create the admin user in **Authentication → Users → Add user** (email and
    password).
 4. Give that user the admin role. In the user's page, set **Raw App Meta Data**
@@ -104,4 +106,5 @@ option).
 - `lib/admin-data.ts` — authenticated admin reads
 - `lib/supabase/` — browser, server and public Supabase clients
 - `supabase/schema.sql` — tables, RLS policies and seed data
+- `supabase/verify.sql` — checks for tables, seeds and the admin role
 - `public/assets/` — food photography, item thumbnails and social preview

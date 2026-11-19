@@ -127,3 +127,7 @@ on conflict (id) do nothing;
 --
 -- 3. Sign out and sign in again so the new JWT includes the role.
 -- 4. Open /admin on the deployed Next.js app.
+
+-- Refresh PostgREST's schema cache so newly created tables appear in the API
+-- immediately, even if the dashboard cached an older version of the schema.
+notify pgrst, 'reload schema';
