@@ -1,0 +1,117 @@
+"use client";
+
+import { savePrice } from "@/app/admin/actions";
+import type { AdminMarket, AdminPriceItem } from "@/lib/admin-types";
+import { CATEGORY_NAMES } from "@/lib/prices";
+import { AdminSubmit } from "./AdminSubmit";
+
+type Props = {
+  markets: AdminMarket[];
+  item?: AdminPriceItem;
+};
+
+export function PriceForm({ markets, item }: Props) {
+  return (
+    <form action={savePrice} className="admin-form">
+      {item ? <input type="hidden" name="id" value={item.id} /> : null}
+
+      <div className="admin-fields">
+        <label className="admin-field">
+          <span>Item name</span>
+          <input name="name" defaultValue={item?.name ?? ""} required placeholder="e.g. Local Rice" />
+        </label>
+
+        <label className="admin-field">
+          <span>Category</span>
+          <select name="category" defaultValue={item?.category ?? "Grains"}>
+            {CATEGORY_NAMES.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="admin-field">
+          <span>Market</span>
+          <select
+            name="market_id"
+            defaultValue={item?.market_id ?? markets[0]?.id ?? ""}
+            required
+          >
+            {markets.map((market) => (
+              <option key={market.id} value={market.id}>
+                {market.name}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="admin-field">
+          <span>Unit</span>
+          <input name="unit" defaultValue={item?.unit ?? ""} required placeholder="50kg bag" />
+        </label>
+
+        <label className="admin-field">
+          <span>Price (₦)</span>
+          <input
+            name="price"
+            type="number"
+            min="0"
+            step="1"
+            defaultValue={item?.price ?? ""}
+            required
+            placeholder="78000"
+          />
+        </label>
+
+        <label className="admin-field">
+          <span>Change (%)</span>
+          <input
+            name="change"
+            type="number"
+            step="0.1"
+            defaultValue={item?.change ?? 0}
+            placeholder="2.4"
+          />
+        </label>
+
+        <label className="admin-field admin-field-wide">
+          <span>7-day history</span>
+          <input
+            name="history"
+            defaultValue={item?.history.join(", ") ?? ""}
+            placeholder="70000, 72000, 73000, 75000, 74000, 76000, 78000"
+          />
+        </label>
+
+        <label className="admin-field">
+          <span>Sort order</span>
+          <input
+            name="sort_order"
+            type="number"
+            step="1"
+            defaultValue={item?.sort_order ?? 0}
+          />
+        </label>
+
+        <label className="admin-check">
+          <input name="active" type="checkbox" defaultChecked={item ? item.active : true} />
+          <span>Active on the public board</span>
+        </label>
+      </div>
+
+      <div className="admin-actions">
+        <AdminSubmit />
+        {item ? (
+          <span className="admin-updated">
+            Updated{" "}
+            {item.updated_at
+              ? new Date(item.updated_at).toLocaleString("en-NG")
+              : "—"}
+          </span>
+        ) : null}
+      </div>
+    </form>
+  );
+}

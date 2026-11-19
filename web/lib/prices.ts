@@ -3,10 +3,17 @@ export type PriceItem = {
   name: string;
   category: "Grains" | "Vegetables" | "Proteins" | "Oils & spices";
   market: string;
+  marketId?: string;
   unit: string;
   price: number;
   change: number;
   history: number[];
+};
+
+export type Market = {
+  slug: string;
+  name: string;
+  detail: string;
 };
 
 export const CATEGORY_KEYS: Record<PriceItem["category"], string> = {
@@ -15,6 +22,8 @@ export const CATEGORY_KEYS: Record<PriceItem["category"], string> = {
   Proteins: "proteins",
   "Oils & spices": "oils"
 };
+
+export const CATEGORY_NAMES = ["Grains", "Vegetables", "Proteins", "Oils & spices"] as const;
 
 export const MARKET_KEYS = ["lagos", "abuja", "kano", "kaduna", "port-harcourt", "ibadan"] as const;
 export const CATEGORY_VALUES = ["grains", "vegetables", "proteins", "oils"] as const;
@@ -37,6 +46,15 @@ export const categoryOptions = [
   { value: "oils", label: "Oils & spices" }
 ];
 
+export const fallbackMarkets: Market[] = [
+  { slug: "lagos", name: "Lagos", detail: "Mile 12 · Oshodi · Ikeja" },
+  { slug: "abuja", name: "Abuja", detail: "Wuse · Garki · Nyanya" },
+  { slug: "kano", name: "Kano", detail: "Dawanau · Kurmi" },
+  { slug: "kaduna", name: "Kaduna", detail: "Barnawa · Kasuwa" },
+  { slug: "port-harcourt", name: "Port Harcourt", detail: "Mile 3 · Rumuokoro" },
+  { slug: "ibadan", name: "Ibadan", detail: "Bodija · Oja'ba" }
+];
+
 export const prices: PriceItem[] = [
   { id: "rice", name: "Local Rice", category: "Grains", market: "Lagos", unit: "50kg bag", price: 78000, change: 2.4, history: [70000, 72000, 73000, 75000, 74000, 76000, 78000] },
   { id: "beans", name: "Honey Beans", category: "Grains", market: "Kano", unit: "50kg bag", price: 65000, change: -1.2, history: [68000, 67000, 66000, 67000, 65000, 66000, 65000] },
@@ -55,7 +73,10 @@ export const prices: PriceItem[] = [
 export const WATCHLIST_KEY = "sabeer-market-watchlist-v1";
 
 export function slug(value: string) {
-  return value.toLowerCase().replace(/\s+/g, "-");
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 export function money(value: number) {

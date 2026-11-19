@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const PRICES = [
+  let PRICES = [
     { id: "rice", name: "Local Rice", category: "Grains", market: "Lagos", unit: "50kg bag", price: 78000, change: 2.4, history: [70000, 72000, 73000, 75000, 74000, 76000, 78000] },
     { id: "beans", name: "Honey Beans", category: "Grains", market: "Kano", unit: "50kg bag", price: 65000, change: -1.2, history: [68000, 67000, 66000, 67000, 65000, 66000, 65000] },
     { id: "maize", name: "Maize", category: "Grains", market: "Abuja", unit: "100kg bag", price: 52000, change: 1.8, history: [48000, 49000, 50000, 51000, 50000, 51000, 52000] },
@@ -22,7 +22,14 @@
     "Proteins": "proteins",
     "Oils & spices": "oils"
   };
-  const MARKET_KEYS = ["lagos", "abuja", "kano", "kaduna", "port-harcourt", "ibadan"];
+  const CATEGORY_IMAGES = {
+    "Grains": "assets/category-grains.webp",
+    "Vegetables": "assets/category-vegetables.webp",
+    "Proteins": "assets/category-proteins.webp",
+    "Oils & spices": "assets/category-oils.webp"
+  };
+  const SUPABASE_CONFIG = window.SABEER_SUPABASE || null;
+  let MARKET_KEYS = ["lagos", "abuja", "kano", "kaduna", "port-harcourt", "ibadan"];
   const WATCHLIST_KEY = "sabeer-market-watchlist-v1";
 
   const priceRows = document.querySelector("#price-rows");
@@ -40,6 +47,10 @@
   const nav = document.querySelector("#site-nav");
   const menuToggle = document.querySelector(".menu-toggle");
   const year = document.querySelector("#year");
+  const heroTicker = document.querySelector("#hero-ticker");
+  const marketGrid = document.querySelector("#market-grid");
+  const footerMarketLinks = document.querySelector("#footer-market-links");
+  const marketCount = document.querySelector("#market-count");
 
   const state = {
     query: "",
@@ -52,7 +63,10 @@
   let urlTimer = 0;
 
   function slug(value) {
-    return String(value).toLowerCase().replace(/\s+/g, "-");
+    return String(value)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
   }
 
   function escapeHtml(value) {
@@ -114,7 +128,8 @@
   function filteredPrices() {
     const query = state.query.toLowerCase();
     return PRICES.filter((item) => {
-      if (state.market !== "all" && slug(item.market) !== state.market) return false;
+      const itemMarket = item.marketId || slug(item.market);
+      if (state.market !== "all" && itemMarket !== state.market) return false;
       if (state.category !== "all" && CATEGORY_KEYS[item.category] !== state.category) return false;
       if (state.watchlistOnly && !watchlist.has(item.id)) return false;
       if (query) {
@@ -132,11 +147,12 @@
     priceRows.innerHTML = items.map((item) => {
       const tracked = watchlist.has(item.id);
       const trackLabel = tracked ? `Stop tracking ${item.name}` : `Track ${item.name}`;
+      const fallbackImage = CATEGORY_IMAGES[item.category] || "assets/category-grains.webp";
       return `
         <tr>
           <td class="price-item-cell">
             <div class="price-item">
-              <img class="price-thumb" src="assets/items/${escapeHtml(item.id)}.webp" alt="" width="42" height="42" loading="lazy" decoding="async">
+              <img class="price-thumb" src="assets/items/${escapeHtml(item.id)}.webp" alt="" width="42" height="42" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${fallbackImage}'">
               <span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.category)}</small></span>
             </div>
           </td>
@@ -176,6 +192,116 @@
     watchlistCount.textContent = String(watchlist.size);
     watchlistToggle.classList.toggle("is-active", state.watchlistOnly);
     watchlistToggle.setAttribute("aria-pressed", String(state.watchlistOnly));
+  }
+
+  function updateHeroTicker() {
+    if (!heroTicker) return;
+    const ticker = PRICES.slice(0, 5).map((item) => {
+      const arrow = item.change > 0 ? "↑" : item.change < 0 ? "↓" : "→";
+      return `${item.name.toUpperCase()} ${money(item.price)} ${arrow}`;
+    }).join(" · ");
+
+    if (ticker) heroTicker.textContent = ticker;
+  }
+
+  function renderMarketChips(markets) {
+    if (!marketChips) return;
+    const options = [{ id: "all", name: "All markets" }, ...markets];
+    marketChips.innerHTML = options.map((market) => (
+      `<button class="filter-chip${state.market === market.id ? " is-active" : ""}" type="button" data-market="${escapeHtml(market.id)}">${escapeHtml(market.name)}</button>`
+    )).join("");
+  }
+
+  function renderMarketGrid(markets) {
+    if (!marketGrid) return;
+    marketGrid.innerHTML = markets.map((market) => (
+      `<a class="market-card" href="?market=${encodeURIComponent(market.id)}#prices">` +
+        `<span class="market-dot" aria-hidden="true"></span>` +
+        `<span class="market-text"><strong>${escapeHtml(market.name)}</strong><small>${escapeHtml(market.detail || "")}</small></span>` +
+        `<span class="market-arrow" aria-hidden="true">↗</span>` +
+      `</a>`
+    )).join("");
+  }
+
+  function renderFooterMarkets(markets) {
+    if (!footerMarketLinks) return;
+    footerMarketLinks.querySelectorAll("a").forEach((link) => link.remove());
+    markets.forEach((market) => {
+      const link = document.createElement("a");
+      link.href = `?market=${encodeURIComponent(market.id)}#prices`;
+      link.textContent = market.name;
+      footerMarketLinks.appendChild(link);
+    });
+  }
+
+  async function fetchSupabase(path) {
+    if (!SUPABASE_CONFIG || !SUPABASE_CONFIG.url || !SUPABASE_CONFIG.key) return null;
+    const base = String(SUPABASE_CONFIG.url).replace(/\/$/, "");
+    const response = await fetch(`${base}${path}`, {
+      headers: { apikey: SUPABASE_CONFIG.key },
+      cache: "no-store"
+    });
+    if (!response.ok) return null;
+    return response.json();
+  }
+
+  async function loadSupabaseData() {
+    if (!SUPABASE_CONFIG || !SUPABASE_CONFIG.url || !SUPABASE_CONFIG.key) return;
+
+    try {
+      const [priceRows, marketRows] = await Promise.all([
+        fetchSupabase("/rest/v1/price_items?select=id,name,category,market_id,unit,price,change,history,active,sort_order,markets(name)&active=eq.true&order=sort_order.asc"),
+        fetchSupabase("/rest/v1/markets?select=id,name,detail,sort_order&order=sort_order.asc")
+      ]);
+
+      if (Array.isArray(marketRows)) {
+        MARKET_KEYS = marketRows.map((market) => String(market.id));
+        if (state.market !== "all" && !MARKET_KEYS.includes(state.market)) {
+          state.market = "all";
+        }
+
+        renderMarketChips(marketRows);
+        renderMarketGrid(marketRows);
+        renderFooterMarkets(marketRows);
+        if (marketCount) marketCount.textContent = String(marketRows.length);
+
+        const params = new URLSearchParams(window.location.search);
+        const urlMarket = params.get("market");
+        if (urlMarket && MARKET_KEYS.includes(urlMarket)) {
+          state.market = urlMarket;
+        }
+        setActive(marketChips, "market", state.market);
+      }
+
+      if (Array.isArray(priceRows)) {
+        PRICES = priceRows.map((row) => {
+          const market = Array.isArray(row.markets) ? row.markets[0] : row.markets;
+          const price = Number(row.price);
+          const change = Number(row.change);
+          const history = Array.isArray(row.history)
+            ? row.history.map(Number).filter(Number.isFinite)
+            : [];
+
+          return {
+            id: String(row.id),
+            name: String(row.name),
+            category: row.category,
+            marketId: String(row.market_id),
+            market: market && market.name ? String(market.name) : String(row.market_id),
+            unit: String(row.unit),
+            price: Number.isFinite(price) ? price : 0,
+            change: Number.isFinite(change) ? change : 0,
+            history: history.length ? history : [Number.isFinite(price) ? price : 0]
+          };
+        });
+
+        watchlist = loadWatchlist();
+        updateHeroTicker();
+        render();
+      }
+    } catch (error) {
+      /* Keep the built-in snapshot if Supabase is unreachable. */
+    }
   }
 
   function setActive(container, attribute, value) {
@@ -323,6 +449,8 @@
 
   applyUrlParams();
   render();
+  updateHeroTicker();
+  loadSupabaseData();
 
   if (hasFilterParams || window.location.hash === "#prices") {
     window.requestAnimationFrame(scrollToPrices);

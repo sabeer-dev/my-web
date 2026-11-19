@@ -1,5 +1,9 @@
 import { HeroSearch } from "@/components/HeroSearch";
 import { PriceBoard } from "@/components/PriceBoard";
+import { getMarkets, getPriceItems } from "@/lib/market-data";
+import { money } from "@/lib/prices";
+
+export const revalidate = 60;
 
 const categories = [
   { slug: "grains", className: "category-grains", label: "Grains & staples", detail: "Rice, beans, maize, garri" },
@@ -8,16 +12,18 @@ const categories = [
   { slug: "oils", className: "category-oils", label: "Oils & spices", detail: "Palm oil, cooking oil, ginger, garlic" }
 ];
 
-const markets = [
-  { slug: "lagos", name: "Lagos", detail: "Mile 12 · Oshodi · Ikeja" },
-  { slug: "abuja", name: "Abuja", detail: "Wuse · Garki · Nyanya" },
-  { slug: "kano", name: "Kano", detail: "Dawanau · Kurmi" },
-  { slug: "kaduna", name: "Kaduna", detail: "Barnawa · Kasuwa" },
-  { slug: "port-harcourt", name: "Port Harcourt", detail: "Mile 3 · Rumuokoro" },
-  { slug: "ibadan", name: "Ibadan", detail: "Bodija · Oja'ba" }
-];
+export default async function HomePage() {
+  const [markets, priceItems] = await Promise.all([getMarkets(), getPriceItems()]);
+  const tickerItems = priceItems.slice(0, 5);
+  const ticker = tickerItems.length
+    ? tickerItems
+        .map((item) => {
+          const arrow = item.change > 0 ? "↑" : item.change < 0 ? "↓" : "→";
+          return `${item.name.toUpperCase()} ${money(item.price)} ${arrow}`;
+        })
+        .join(" · ")
+    : "RICE ₦78,000 ↑ · TOMATOES ₦32,000 ↑ · BEANS ₦65,000 ↓ · ONIONS ₦45,000 ↓ · EGGS ₦5,200 →";
 
-export default function HomePage() {
   return (
     <main>
       <section className="hero" id="home" aria-labelledby="hero-title">
@@ -34,7 +40,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="hero-caption"><span>RICE ₦78,000 ↑ · TOMATOES ₦32,000 ↑ · BEANS ₦65,000 ↓ · ONIONS ₦45,000 ↓ · EGGS ₦5,200 →</span><span>HONEST PRICES · REAL MARKETS · EVERY MORNING</span></div>
+        <div className="hero-caption"><span>{ticker}</span><span>HONEST PRICES · REAL MARKETS · EVERY MORNING</span></div>
       </section>
 
       <div className="trust-strip" aria-label="Why use Sabeer Market">
@@ -86,7 +92,7 @@ export default function HomePage() {
           <div><p className="eyebrow">Today&apos;s market board</p><h2>Today&apos;s prices, <em>at a glance.</em></h2></div>
           <p className="section-aside">A fair price is easier to spot when you can see the whole market. Search an item, pick a city, and compare the week&apos;s movement.</p>
         </div>
-        <PriceBoard />
+        <PriceBoard items={priceItems} markets={markets} />
       </section>
 
       <section className="how section-pad" id="how">
@@ -120,7 +126,7 @@ export default function HomePage() {
         <div className="markets-panel">
           <div>
             <p className="eyebrow">Market coverage</p>
-            <h2>Six cities today. <em>More every month.</em></h2>
+            <h2>{markets.length} {markets.length === 1 ? "city" : "cities"} today. <em>More every month.</em></h2>
             <p>We start with the markets our neighbours shop most, then add new cities as we grow. Tap a market to see its board.</p>
           </div>
           <div className="market-grid">

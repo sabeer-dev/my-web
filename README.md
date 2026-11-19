@@ -42,11 +42,34 @@ npm run build
 npm start
 ```
 
+## Price manager (Supabase)
+
+The Next.js app includes an authenticated admin page at `/admin` for editing
+food prices and markets. It is backed by Supabase.
+
+1. Run [`web/supabase/schema.sql`](./web/supabase/schema.sql) in the Supabase SQL Editor.
+2. Create an admin user in **Authentication → Users** and set its **App Metadata**
+   to `{"role":"admin"}`.
+3. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to
+   `web/.env.local` (see `web/.env.example`).
+4. Open `/admin` and sign in.
+
+The public Next.js page reads live prices from Supabase and falls back to the
+built-in data if Supabase is unavailable. The static GitHub Pages site reads
+the same tables through `supabase-config.js` using the publishable key.
+
+Deploy the admin app to Vercel with the repository root set to `web`. GitHub
+Pages only hosts the static site and cannot run the authenticated admin page.
+See [`web/README.md`](./web/README.md) for the full setup.
+
 ## Structure
 
 - `index.html`, `styles.css`, `script.js` — static site and price-board behaviour
+- `supabase-config.js` — public Supabase URL and publishable key for the static site
 - `assets/` — static illustrations, category artwork and social preview
-- [`web/app/`](./web/app/) — App Router page, metadata, layout and global styles
-- [`web/components/`](./web/components/) — header, footer, hero search, brand mark and price board
-- [`web/lib/prices.ts`](./web/lib/prices.ts) — shared price data and formatting helpers
+- [`web/app/`](./web/app/) — App Router page, admin, metadata, layout and global styles
+- [`web/components/`](./web/components/) — header, footer, hero search, brand mark, price board and admin forms
+- [`web/lib/prices.ts`](./web/lib/prices.ts) — shared types, fallback price data and formatting helpers
+- [`web/lib/market-data.ts`](./web/lib/market-data.ts) — public Supabase reads with fallback
+- [`web/supabase/schema.sql`](./web/supabase/schema.sql) — tables, RLS policies and seed data
 - [`web/public/assets/`](./web/public/assets/) — Next.js artwork and social image

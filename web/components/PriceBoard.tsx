@@ -4,17 +4,27 @@ import { useEffect, useMemo, useState } from "react";
 import {
   CATEGORY_KEYS,
   CATEGORY_VALUES,
-  MARKET_KEYS,
   WATCHLIST_KEY,
   categoryOptions,
   changeClass,
   changeLabel,
-  marketOptions,
   money,
-  prices,
   slug,
-  sparkBars
+  sparkBars,
+  type PriceItem
 } from "@/lib/prices";
+
+type MarketOption = {
+  slug: string;
+  name: string;
+};
+
+const CATEGORY_IMAGES: Record<PriceItem["category"], string> = {
+  Grains: "/assets/category-grains.webp",
+  Vegetables: "/assets/category-vegetables.webp",
+  Proteins: "/assets/category-proteins.webp",
+  "Oils & spices": "/assets/category-oils.webp"
+};
 
 function scrollToPriceSection() {
   const section = document.getElementById("prices");
@@ -37,19 +47,30 @@ function StarIcon() {
   );
 }
 
-export function PriceBoard() {
+export function PriceBoard({
+  items,
+  markets
+}: {
+  items: PriceItem[];
+  markets: MarketOption[];
+}) {
   const [query, setQuery] = useState("");
   const [market, setMarket] = useState("all");
   const [category, setCategory] = useState("all");
   const [watchlistOnly, setWatchlistOnly] = useState(false);
   const [watchlist, setWatchlist] = useState<Set<string>>(() => new Set());
 
+  const marketOptions = [
+    { value: "all", label: "All markets" },
+    ...markets.map((entry) => ({ value: entry.slug, label: entry.name }))
+  ];
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const initialQuery = (params.get("q") ?? "").trim();
     const initialMarket = params.get("market") ?? "all";
     const initialCategory = params.get("category") ?? "all";
-    const hasMarket = (MARKET_KEYS as readonly string[]).includes(initialMarket);
+    const hasMarket = markets.some((entry) => entry.slug === initialMarket);
     const hasCategory = (CATEGORY_VALUES as readonly string[]).includes(initialCategory);
 
     if (initialQuery) setQuery(initialQuery);
@@ -59,7 +80,7 @@ export function PriceBoard() {
     try {
       const stored = JSON.parse(localStorage.getItem(WATCHLIST_KEY) ?? "[]");
       if (Array.isArray(stored)) {
-        const valid = new Set(prices.map((item) => item.id));
+        const valid = new Set(items.map((item) => item.id));
         setWatchlist(new Set(stored.filter((id): id is string => typeof id === "string" && valid.has(id))));
       }
     } catch {
@@ -93,8 +114,9 @@ export function PriceBoard() {
   const filtered = useMemo(() => {
     const search = query.trim().toLowerCase();
 
-    return prices.filter((item) => {
-      if (market !== "all" && slug(item.market) !== market) return false;
+    return items.filter((item) => {
+      const itemMarket = item.marketId ?? slug(item.market);
+      if (market !== "all" && itemMarket !== market) return false;
       if (category !== "all" && CATEGORY_KEYS[item.category] !== category) return false;
       if (watchlistOnly && !watchlist.has(item.id)) return false;
 
@@ -105,7 +127,7 @@ export function PriceBoard() {
 
       return true;
     });
-  }, [category, market, query, watchlist, watchlistOnly]);
+  }, [category, items, market, query, watchlist, watchlistOnly]);
 
   function toggleWatch(id: string) {
     setWatchlist((previous) => {
@@ -229,6 +251,9 @@ export function PriceBoard() {
                         height={42}
                         loading="lazy"
                         decoding="async"
+                        onError={(event) => {
+                          event.currentTarget.src = CATEGORY_IMAGES[item.category];
+                        }}
                       />
                       <span><strong>{item.name}</strong><small>{item.category}</small></span>
                     </div>
@@ -285,7 +310,7 @@ export function PriceBoard() {
 
       <div className="price-footer">
         <span id="price-count" aria-live="polite">
-          Showing {filtered.length} of {prices.length} {itemLabel}{watchlistOnly ? " in your watchlist" : ""}
+          Showing {filtered.length} of {items.length} {itemLabel}{watchlistOnly ? " in your watchlist" : ""}
         </span>
         <span className="price-updated"><i aria-hidden="true" />Checked at 7:00 AM</span>
         <a
