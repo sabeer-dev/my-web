@@ -27,7 +27,10 @@ npm run start
    cache. Use [`supabase/verify.sql`](./supabase/verify.sql) to confirm the
    tables, seed counts and admin role.
 3. Create the admin user in **Authentication → Users → Add user** (email and
-   password).
+   password). Alternatively, run
+   [`supabase/admin-user.sql`](./supabase/admin-user.sql) after replacing the
+   placeholder email and password; it also fills the auth columns that GoTrue
+   requires to be empty strings rather than `NULL`.
 4. Give that user the admin role. In the user's page, set **Raw App Meta Data**
    to:
 
@@ -107,4 +110,5 @@ option).
 - `lib/supabase/` — browser, server and public Supabase clients
 - `supabase/schema.sql` — tables, RLS policies and seed data
 - `supabase/verify.sql` — checks for tables, seeds and the admin role
+- `supabase/admin-user.sql` — optional SQL admin-user creation template
 - `public/assets/` — food photography, item thumbnails and social preview
