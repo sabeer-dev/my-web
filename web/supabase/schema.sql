@@ -84,6 +84,13 @@ to authenticated
 using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
 with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
+-- Explicit table privileges. Supabase does not always grant these to tables
+-- created from the SQL Editor, and RLS policies alone are not sufficient.
+grant select on public.markets to anon, authenticated;
+grant select on public.price_items to anon, authenticated;
+grant insert, update, delete on public.markets to authenticated;
+grant insert, update, delete on public.price_items to authenticated;
+
 -- Seed the six markets that the site starts with.
 insert into public.markets (id, name, detail, sort_order) values
   ('lagos', 'Lagos', 'Mile 12 · Oshodi · Ikeja', 1),
