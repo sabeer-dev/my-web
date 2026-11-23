@@ -11,7 +11,11 @@ export type AdminSeller = {
   id: string;
   email: string;
   name: string;
+  phone: string;
+  requestedMarketId: string | null;
+  note: string;
   verified: boolean;
+  approvedAt: string | null;
 };
 
 export type AdminPriceItem = {

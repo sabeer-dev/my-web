@@ -65,8 +65,8 @@ export default async function SellerPage({ searchParams }: SellerPageProps) {
           <p className="eyebrow">Sabeer Market · Sellers</p>
           <h1>This is the seller portal</h1>
           <p>
-            You are signed in as <strong>{user.email}</strong>. Seller accounts are created by
-            the Sabeer Market team with the <code>seller</code> role.
+            You are signed in as <strong>{user.email}</strong>. This area is for verified sellers.
+            If you meant to register, sign out and use the registration link.
           </p>
           <form action={signOut}>
             <button className="button button-dark" type="submit">
@@ -87,8 +87,8 @@ export default async function SellerPage({ searchParams }: SellerPageProps) {
           <p className="eyebrow">Sabeer Market · Sellers</p>
           <h1>Account pending verification</h1>
           <p>
-            Your seller account is not active yet. Ask the Sabeer Market team to verify it from
-            the admin dashboard, then sign in again.
+            Thanks for registering. Your account is waiting for verification. The Sabeer Market
+            team will review it and assign your items, then you can sign in again to update prices.
           </p>
           <form action={signOut}>
             <button className="button button-dark" type="submit">

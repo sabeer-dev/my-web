@@ -22,9 +22,19 @@ create table if not exists public.sellers (
   id uuid primary key references auth.users(id) on delete cascade,
   email text not null unique,
   name text not null default '',
+  phone text not null default '',
+  requested_market_id text,
+  note text not null default '',
   verified boolean not null default false,
+  approved_at timestamptz,
   created_at timestamptz not null default now()
 );
+
+-- Existing installations get the registration fields without losing data.
+alter table public.sellers add column if not exists phone text not null default '';
+alter table public.sellers add column if not exists requested_market_id text;
+alter table public.sellers add column if not exists note text not null default '';
+alter table public.sellers add column if not exists approved_at timestamptz;
 
 create table if not exists public.price_items (
   id text primary key,
@@ -62,6 +72,58 @@ drop trigger if exists price_items_touch_updated_at on public.price_items;
 create trigger price_items_touch_updated_at
 before update on public.price_items
 for each row execute function public.touch_updated_at();
+
+-- Seller self-registration. A public sign-up can only request the seller role;
+-- the profile starts unverified, so no price data is editable until an admin
+-- verifies it and assigns items.
+create or replace function public.set_seller_role_on_signup()
+returns trigger
+language plpgsql
+security definer
+set search_path = public, auth
+as $$
+begin
+  if coalesce(new.raw_user_meta_data ->> 'requested_role', '') = 'seller' then
+    new.raw_app_meta_data := coalesce(new.raw_app_meta_data, '{}'::jsonb)
+      || jsonb_build_object('role', 'seller');
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created_set_seller_role on auth.users;
+create trigger on_auth_user_created_set_seller_role
+before insert on auth.users
+for each row execute function public.set_seller_role_on_signup();
+
+create or replace function public.create_seller_profile()
+returns trigger
+language plpgsql
+security definer
+set search_path = public, auth
+as $$
+begin
+  if coalesce(new.raw_app_meta_data ->> 'role', '') = 'seller' then
+    insert into public.sellers (id, email, name, phone, requested_market_id, note, verified)
+    values (
+      new.id,
+      new.email,
+      coalesce(nullif(new.raw_user_meta_data ->> 'name', ''), split_part(new.email, '@', 1)),
+      coalesce(new.raw_user_meta_data ->> 'phone', ''),
+      nullif(new.raw_user_meta_data ->> 'requested_market_id', ''),
+      coalesce(new.raw_user_meta_data ->> 'note', ''),
+      false
+    )
+    on conflict (id) do nothing;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created_seller_profile on auth.users;
+create trigger on_auth_user_created_seller_profile
+after insert on auth.users
+for each row execute function public.create_seller_profile();
 
 alter table public.markets enable row level security;
 alter table public.sellers enable row level security;

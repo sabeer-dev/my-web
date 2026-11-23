@@ -48,7 +48,7 @@ const tabMeta: Record<Tab, { eyebrow: string; title: string; subtitle: string }>
   sellers: {
     eyebrow: "Team",
     title: "Sellers",
-    subtitle: "Verify seller accounts and see which price items each seller can update."
+    subtitle: "Review new registrations, verify sellers, and see which items they can update."
   }
 };
 
@@ -126,6 +126,18 @@ export function AdminWorkspace({ markets, sellers, items, email, banner }: Props
   }, [items]);
 
   const liveCount = useMemo(() => items.filter((item) => item.active).length, [items]);
+
+  const pendingSellers = useMemo(
+    () => sellers.filter((seller) => !seller.verified && !seller.approvedAt),
+    [sellers]
+  );
+
+  const orderedSellers = useMemo(() => {
+    const rank = (seller: AdminSeller) => (seller.verified ? 2 : seller.approvedAt ? 1 : 0);
+    return [...sellers].sort(
+      (a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name)
+    );
+  }, [sellers]);
 
   const lastUpdated = useMemo(
     () =>
@@ -710,18 +722,31 @@ export function AdminWorkspace({ markets, sellers, items, email, banner }: Props
                 <p className="eyebrow">Team</p>
                 <h2>
                   {sellers.length} {sellers.length === 1 ? "seller" : "sellers"}
+                  {pendingSellers.length ? (
+                    <span className="admin-market-count admin-pending-count">
+                      {pendingSellers.length} pending
+                    </span>
+                  ) : null}
                 </h2>
               </div>
-              <Link className="text-link" href="/seller" target="_blank" rel="noreferrer">
-                Seller portal
+              <Link className="text-link" href="/seller/register" target="_blank" rel="noreferrer">
+                Registration link
                 <Icon name="external" size={14} />
               </Link>
             </header>
 
-            {sellers.length ? (
+            {orderedSellers.length ? (
               <div className="admin-market-grid">
-                {sellers.map((seller) => {
+                {orderedSellers.map((seller) => {
                   const assigned = sellerCounts.get(seller.id) ?? 0;
+                  const requestedMarket = seller.requestedMarketId
+                    ? marketNames.get(seller.requestedMarketId) ?? seller.requestedMarketId
+                    : null;
+                  const status = seller.verified
+                    ? "Verified"
+                    : seller.approvedAt
+                      ? "Paused"
+                      : "Pending";
                   return (
                     <article className="admin-market-card" key={seller.id}>
                       <div className="admin-market-card-head">
@@ -730,10 +755,15 @@ export function AdminWorkspace({ markets, sellers, items, email, banner }: Props
                           <small title={seller.email}>{seller.email}</small>
                         </div>
                         <span
-                          className={`admin-status${seller.verified ? " is-live" : ""}`}
+                          className={`admin-status${seller.verified ? " is-live" : " is-pending"}`}
                         >
-                          {seller.verified ? "Verified" : "Paused"}
+                          {status}
                         </span>
+                      </div>
+                      <div className="admin-seller-meta">
+                        {seller.phone ? <span>{seller.phone}</span> : null}
+                        {requestedMarket ? <span>Market: {requestedMarket}</span> : null}
+                        {seller.note ? <span>{seller.note}</span> : null}
                       </div>
                       <div className="admin-market-card-foot">
                         <span>{assigned} assigned items</span>
@@ -745,7 +775,7 @@ export function AdminWorkspace({ markets, sellers, items, email, banner }: Props
                             value={seller.verified ? "false" : "true"}
                           />
                           <button className="admin-link-button" type="submit">
-                            {seller.verified ? "Pause access" : "Verify seller"}
+                            {seller.verified ? "Pause access" : status === "Paused" ? "Reactivate" : "Verify seller"}
                           </button>
                         </form>
                       </div>
@@ -756,7 +786,7 @@ export function AdminWorkspace({ markets, sellers, items, email, banner }: Props
             ) : (
               <EmptyState
                 title="No sellers yet"
-                message="Run web/supabase/seller-user.sql to create a seller, then assign items from the Prices tab."
+                message="Share the registration link with market partners. New accounts appear here for verification."
               />
             )}
             <p className="admin-panel-note">

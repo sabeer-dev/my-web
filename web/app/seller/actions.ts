@@ -8,6 +8,11 @@ export type LoginState = {
   error?: string;
 };
 
+export type RegisterState = {
+  error?: string;
+  success?: string;
+};
+
 function text(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim();
 }
@@ -80,6 +85,51 @@ export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/seller");
+}
+
+export async function registerSeller(
+  _previousState: RegisterState,
+  formData: FormData
+): Promise<RegisterState> {
+  const name = text(formData, "name");
+  const email = text(formData, "email").toLowerCase();
+  const phone = text(formData, "phone");
+  const requestedMarketId = text(formData, "market");
+  const note = text(formData, "note");
+  const password = String(formData.get("password") ?? "");
+
+  if (name.length < 2) return { error: "Enter your name." };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { error: "Enter a valid email address." };
+  }
+  if (password.length < 8) {
+    return { error: "Use a password with at least 8 characters." };
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        name,
+        phone,
+        requested_market_id: requestedMarketId,
+        note,
+        requested_role: "seller"
+      }
+    }
+  });
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin");
+
+  return {
+    success: data.session
+      ? "Registration received. Your account is pending verification before you can edit prices."
+      : "Registration received. Check your email to confirm your address, then wait for verification."
+  };
 }
 
 export async function saveOwnPrice(formData: FormData) {

@@ -200,7 +200,7 @@ export async function setSellerVerified(formData: FormData) {
   const verified = formData.get("verified") === "true";
   const { error } = await supabase
     .from("sellers")
-    .update({ verified })
+    .update(verified ? { verified, approved_at: new Date().toISOString() } : { verified })
     .eq("id", id);
 
   if (error) redirect(`/admin?error=${encodeURIComponent(error.message)}`);

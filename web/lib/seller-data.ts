@@ -6,7 +6,11 @@ type SellerRow = {
   id: string;
   email: string;
   name: string | null;
+  phone: string | null;
+  requested_market_id: string | null;
+  note: string | null;
   verified: boolean;
+  approved_at: string | null;
 };
 
 type MarketRow = {
@@ -56,7 +60,7 @@ export async function getSellerData(userId: string): Promise<SellerData> {
   const [sellerResult, marketsResult, itemsResult] = await Promise.all([
     supabase
       .from("sellers")
-      .select("id,email,name,verified")
+      .select("id,email,name,phone,requested_market_id,note,verified,approved_at")
       .eq("id", userId)
       .maybeSingle(),
     supabase
@@ -84,7 +88,11 @@ export async function getSellerData(userId: string): Promise<SellerData> {
         id: String(row.id),
         email: String(row.email),
         name: String(row.name || row.email.split("@")[0] || "Seller"),
-        verified: Boolean(row.verified)
+        phone: String(row.phone ?? ""),
+        requestedMarketId: row.requested_market_id ? String(row.requested_market_id) : null,
+        note: String(row.note ?? ""),
+        verified: Boolean(row.verified),
+        approvedAt: row.approved_at ?? null
       }
     : null;
 

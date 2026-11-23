@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { signIn, type LoginState } from "@/app/seller/actions";
 import { Icon } from "@/components/admin/AdminIcons";
 
@@ -42,7 +43,8 @@ export function SellerLogin({ notice }: { notice?: string }) {
           <p className="eyebrow">Market partner</p>
           <h2>Seller sign in</h2>
           <p className="admin-login-intro">
-            Use the seller account created for you by the Sabeer Market team.
+            Sign in with the email you registered with. New market partners can create an account
+            first.
           </p>
 
           <form action={formAction} className="admin-login-form">
@@ -80,7 +82,8 @@ export function SellerLogin({ notice }: { notice?: string }) {
           </form>
 
           <p className="admin-note">
-            Need a seller account? Email{" "}
+            New here? <Link className="text-link" href="/seller/register">Register as a seller</Link>.
+            Need help? Email{" "}
             <a href="mailto:shehuusmanumar176@gmail.com?subject=Seller%20account%20request">
               shehuusmanumar176@gmail.com
             </a>

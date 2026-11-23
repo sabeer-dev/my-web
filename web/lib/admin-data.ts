@@ -13,7 +13,11 @@ type SellerRow = {
   id: string;
   email: string;
   name: string | null;
+  phone: string | null;
+  requested_market_id: string | null;
+  note: string | null;
   verified: boolean;
+  approved_at: string | null;
 };
 
 type PriceRow = {
@@ -60,7 +64,7 @@ export async function getAdminData(): Promise<AdminData> {
       .order("sort_order", { ascending: true }),
     supabase
       .from("sellers")
-      .select("id,email,name,verified")
+      .select("id,email,name,phone,requested_market_id,note,verified,approved_at")
       .order("email", { ascending: true }),
     supabase
       .from("price_items")
@@ -87,7 +91,11 @@ export async function getAdminData(): Promise<AdminData> {
     id: String(row.id),
     email: String(row.email),
     name: String(row.name || row.email.split("@")[0] || "Seller"),
-    verified: Boolean(row.verified)
+    phone: String(row.phone ?? ""),
+    requestedMarketId: row.requested_market_id ? String(row.requested_market_id) : null,
+    note: String(row.note ?? ""),
+    verified: Boolean(row.verified),
+    approvedAt: row.approved_at ?? null
   }));
 
   const items = ((itemsResult.data ?? []) as PriceRow[]).map((row) => {

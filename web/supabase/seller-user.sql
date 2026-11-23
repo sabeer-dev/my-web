@@ -36,9 +36,13 @@ with new_seller as (
   )
   returning id, email
 )
-insert into public.sellers (id, email, name, verified)
-select id, email, 'Market Seller', true
-from new_seller;
+insert into public.sellers (id, email, name, verified, approved_at)
+select id, email, 'Market Seller', true, now()
+from new_seller
+on conflict (id) do update set
+  verified = true,
+  approved_at = coalesce(public.sellers.approved_at, now()),
+  name = excluded.name;
 
 -- 2. GoTrue expects empty strings, not NULL, in several token/phone columns.
 update auth.users
