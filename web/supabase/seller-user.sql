@@ -17,8 +17,8 @@ with new_seller as (
     raw_app_meta_data,
     raw_user_meta_data
   )
-  values (
-    '00000000-0000-0000-0000-000000000000',
+  select
+    '00000000-0000-0000-0000-000000000000'::uuid,
     gen_random_uuid(),
     'authenticated',
     'authenticated',
@@ -29,8 +29,9 @@ with new_seller as (
     now(),
     '{"role":"seller"}'::jsonb,
     '{"name":"Market Seller"}'::jsonb
+  where not exists (
+    select 1 from auth.users where email = 'seller@example.com'
   )
-  on conflict (email) do nothing
   returning id, email
 )
 insert into public.sellers (id, email, name, verified)
