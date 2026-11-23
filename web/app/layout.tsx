@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
+import { PublicChrome } from "@/components/PublicChrome";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sabeer-dev.github.io/my-web";
 
@@ -47,16 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preload" as="image" href="/assets/hero-market.webp" type="image/webp" />
       </head>
       <body>
-        <div className="announcement">
-          <span className="announcement-dot" aria-hidden="true" />
-          <span>Food prices checked every morning</span>
-          <span className="announcement-sep" aria-hidden="true">·</span>
-          <span>24 markets. 180+ everyday items.</span>
-          <a href="mailto:shehuusmanumar176@gmail.com?subject=Free%20market%20price%20alert">Get a free alert ↗</a>
-        </div>
-        <SiteHeader />
-        {children}
-        <SiteFooter />
+        <PublicChrome>{children}</PublicChrome>
       </body>
     </html>
   );

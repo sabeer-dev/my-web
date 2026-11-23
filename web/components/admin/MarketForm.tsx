@@ -6,15 +6,16 @@ import { AdminSubmit } from "./AdminSubmit";
 
 type Props = {
   market?: AdminMarket;
+  onCancel?: () => void;
 };
 
-export function MarketForm({ market }: Props) {
+export function MarketForm({ market, onCancel }: Props) {
   return (
     <form action={saveMarket} className="admin-form">
       {market ? <input type="hidden" name="id" value={market.id} /> : null}
 
-      <div className="admin-fields">
-        <label className="admin-field">
+      <div className="admin-fields admin-fields-market">
+        <label className="admin-field admin-field-name">
           <span>Market name</span>
           <input
             name="name"
@@ -31,6 +32,9 @@ export function MarketForm({ market }: Props) {
             defaultValue={market?.detail ?? ""}
             placeholder="Mile 12 · Oshodi · Ikeja"
           />
+          <small className="admin-field-help">
+            Shown under the market name on the public site.
+          </small>
         </label>
 
         <label className="admin-field">
@@ -39,13 +43,19 @@ export function MarketForm({ market }: Props) {
             name="sort_order"
             type="number"
             step="1"
+            inputMode="numeric"
             defaultValue={market?.sort_order ?? 0}
           />
         </label>
       </div>
 
       <div className="admin-actions">
-        <AdminSubmit />
+        <AdminSubmit label={market ? "Save market" : "Add market"} />
+        {onCancel ? (
+          <button className="button button-quiet button-small" type="button" onClick={onCancel}>
+            Cancel
+          </button>
+        ) : null}
       </div>
     </form>
   );

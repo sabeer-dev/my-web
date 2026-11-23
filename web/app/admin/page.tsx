@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import { AdminLogin } from "@/components/admin/AdminLogin";
+import { AdminWorkspace } from "@/components/admin/AdminWorkspace";
 import { getAdminData } from "@/lib/admin-data";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 import { signOut } from "./actions";
@@ -23,8 +22,8 @@ type Banner = {
 };
 
 function savedMessage(value: string) {
-  if (value === "price") return "Price saved. The public board will refresh.";
-  if (value === "deleted") return "Item deleted.";
+  if (value === "price") return "Price saved. The public board will refresh shortly.";
+  if (value === "deleted") return "Price item deleted.";
   if (value === "market") return "Market saved.";
   if (value === "market-deleted") return "Market deleted.";
   return "Saved.";
@@ -61,7 +60,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
   if (!user) {
     return (
-      <main className="admin-shell">
+      <main className="admin-shell admin-auth-shell">
         <AdminLogin notice={banner?.tone === "error" ? banner.message : undefined} />
       </main>
     );
@@ -90,44 +89,28 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
   const { markets, items, error } = await getAdminData();
 
-  return (
-    <main className="admin-shell">
-      <div className="admin-top">
-        <div>
-          <p className="eyebrow">Sabeer Market · Staff</p>
-          <h1>Price manager</h1>
-          <p className="admin-lede">
-            Signed in as {user.email}. Changes go live on the public price board.
-          </p>
-        </div>
-        <div className="admin-top-actions">
-          <Link className="text-link" href="/" target="_blank" rel="noreferrer">
-            View public site ↗
-          </Link>
-          <form action={signOut}>
-            <button className="button button-dark button-small" type="submit">
-              Sign out
-            </button>
-          </form>
-        </div>
-      </div>
-
-      {banner ? (
-        <p className={`admin-banner is-${banner.tone}`}>{banner.message}</p>
-      ) : null}
-
-      {error ? (
+  if (error) {
+    return (
+      <main className="admin-shell">
         <div className="admin-setup">
-          <h2>Run the database schema</h2>
+          <p className="eyebrow">Sabeer Market · Staff</p>
+          <h1>Run the database schema</h1>
           <p>
             Open <code>web/supabase/schema.sql</code> in the Supabase SQL Editor and
             run it once. Then reload this page.
           </p>
           <p className="admin-error">{error}</p>
         </div>
-      ) : (
-        <AdminDashboard markets={markets} items={items} />
-      )}
-    </main>
+      </main>
+    );
+  }
+
+  return (
+    <AdminWorkspace
+      markets={markets}
+      items={items}
+      email={user.email ?? "admin@sabeermarket.ng"}
+      banner={banner}
+    />
   );
 }
