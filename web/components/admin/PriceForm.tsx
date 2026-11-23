@@ -59,9 +59,13 @@ export function PriceForm({ markets, sellers, item, onCancel }: Props) {
           <select name="seller_id" defaultValue={item?.seller_id ?? ""}>
             <option value="">Unassigned</option>
             {sellers.map((seller) => (
-              <option key={seller.id} value={seller.id}>
+              <option
+                key={seller.id}
+                value={seller.id}
+                disabled={!seller.verified && item?.seller_id !== seller.id}
+              >
                 {seller.name} · {seller.email}
-                {seller.verified ? "" : " (unverified)"}
+                {seller.verified ? "" : " (verify first)"}
               </option>
             ))}
           </select>
