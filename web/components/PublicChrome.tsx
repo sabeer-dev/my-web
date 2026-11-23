@@ -7,9 +7,13 @@ import { SiteHeader } from "./SiteHeader";
 
 export function PublicChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isAdmin = pathname === "/admin" || pathname.startsWith("/admin/");
+  const isStaffRoute =
+    pathname === "/admin" ||
+    pathname.startsWith("/admin/") ||
+    pathname === "/seller" ||
+    pathname.startsWith("/seller/");
 
-  if (isAdmin) return <>{children}</>;
+  if (isStaffRoute) return <>{children}</>;
 
   return (
     <>

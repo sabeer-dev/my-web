@@ -15,6 +15,7 @@ export type AdminIconName =
   | "clock"
   | "package"
   | "activity"
+  | "users"
   | "shield";
 
 const paths: Record<AdminIconName, ReactNode> = {
@@ -96,6 +97,14 @@ const paths: Record<AdminIconName, ReactNode> = {
     </>
   ),
   activity: <path d="M3 12h4l3-8 4 16 3-8h4" />,
+  users: (
+    <>
+      <path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 20v-2a4 4 0 0 0-3-3.9" />
+      <path d="M16 3.1a4 4 0 0 1 0 7.8" />
+    </>
+  ),
   shield: (
     <>
       <path d="M12 3 4.5 6v5.5c0 4.6 3.1 8.2 7.5 9.5 4.4-1.3 7.5-4.9 7.5-9.5V6L12 3Z" />

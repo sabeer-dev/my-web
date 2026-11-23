@@ -3,10 +3,12 @@
 
 select
   to_regclass('public.markets') as markets,
+  to_regclass('public.sellers') as sellers,
   to_regclass('public.price_items') as price_items;
 
 select
   (select count(*) from public.markets) as market_count,
+  (select count(*) from public.sellers) as seller_count,
   (select count(*) from public.price_items) as price_count;
 
 select id, name, category, market_id, price, active

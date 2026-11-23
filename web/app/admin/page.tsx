@@ -26,6 +26,8 @@ function savedMessage(value: string) {
   if (value === "deleted") return "Price item deleted.";
   if (value === "market") return "Market saved.";
   if (value === "market-deleted") return "Market deleted.";
+  if (value === "seller-verified") return "Seller verified. They can now sign in.";
+  if (value === "seller-unverified") return "Seller access paused.";
   return "Saved.";
 }
 
@@ -87,7 +89,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     );
   }
 
-  const { markets, items, error } = await getAdminData();
+  const { markets, sellers, items, error } = await getAdminData();
 
   if (error) {
     return (
@@ -108,6 +110,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   return (
     <AdminWorkspace
       markets={markets}
+      sellers={sellers}
       items={items}
       email={user.email ?? "admin@sabeermarket.ng"}
       banner={banner}

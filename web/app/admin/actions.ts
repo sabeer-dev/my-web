@@ -94,8 +94,20 @@ export async function savePrice(formData: FormData) {
   const existingId = text(formData, "id");
   const id = existingId || slugify(name) || `item-${Date.now()}`;
   const marketId = text(formData, "market_id");
+  const sellerId = text(formData, "seller_id") || null;
 
   if (!marketId) redirect("/admin?error=Choose%20a%20market.");
+
+  if (sellerId) {
+    const { data: seller } = await supabase
+      .from("sellers")
+      .select("id")
+      .eq("id", sellerId)
+      .eq("verified", true)
+      .maybeSingle();
+
+    if (!seller) redirect("/admin?error=Choose%20a%20verified%20seller.");
+  }
 
   const price = Math.max(0, integerValue(formData, "price"));
   const payload = {
@@ -103,6 +115,7 @@ export async function savePrice(formData: FormData) {
     name,
     category: categoryValue(text(formData, "category")),
     market_id: marketId,
+    seller_id: sellerId,
     unit: text(formData, "unit") || "1 unit",
     price,
     change: numberValue(formData, "change"),
@@ -176,4 +189,23 @@ export async function deleteMarket(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/admin");
   redirect("/admin?saved=market-deleted");
+}
+
+export async function setSellerVerified(formData: FormData) {
+  const supabase = await requireAdmin();
+  const id = text(formData, "id");
+
+  if (!id) redirect("/admin?error=Missing%20seller.");
+
+  const verified = formData.get("verified") === "true";
+  const { error } = await supabase
+    .from("sellers")
+    .update({ verified })
+    .eq("id", id);
+
+  if (error) redirect(`/admin?error=${encodeURIComponent(error.message)}`);
+
+  revalidatePath("/admin");
+  revalidatePath("/seller");
+  redirect(verified ? "/admin?saved=seller-verified" : "/admin?saved=seller-unverified");
 }

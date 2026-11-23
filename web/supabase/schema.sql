@@ -2,7 +2,9 @@
 --
 -- Run this in Supabase Dashboard > SQL Editor.
 -- Public visitors can read the board. Only signed-in users whose
--- app_metadata.role is "admin" can add, edit or delete rows.
+-- app_metadata.role is "admin" can add, edit or delete rows. Verified
+-- sellers with role "seller" can update only the price items assigned to
+-- them through price_items.seller_id.
 --
 -- The script is safe to run more than once. Existing prices and markets
 -- are not overwritten because the seed inserts use ON CONFLICT DO NOTHING.
@@ -12,6 +14,15 @@ create table if not exists public.markets (
   name text not null,
   detail text not null default '',
   sort_order integer not null default 0,
+  created_at timestamptz not null default now()
+);
+
+-- Verified sellers. The id is the same uuid as the Supabase Auth user.
+create table if not exists public.sellers (
+  id uuid primary key references auth.users(id) on delete cascade,
+  email text not null unique,
+  name text not null default '',
+  verified boolean not null default false,
   created_at timestamptz not null default now()
 );
 
@@ -29,8 +40,13 @@ create table if not exists public.price_items (
   updated_at timestamptz not null default now()
 );
 
+-- Existing installations get this column without losing any price data.
+alter table public.price_items
+  add column if not exists seller_id uuid references public.sellers(id) on delete set null;
+
 create index if not exists price_items_market_idx on public.price_items (market_id);
 create index if not exists price_items_sort_idx on public.price_items (sort_order, name);
+create index if not exists price_items_seller_idx on public.price_items (seller_id);
 
 create or replace function public.touch_updated_at()
 returns trigger
@@ -48,6 +64,7 @@ before update on public.price_items
 for each row execute function public.touch_updated_at();
 
 alter table public.markets enable row level security;
+alter table public.sellers enable row level security;
 alter table public.price_items enable row level security;
 
 -- Public read access.
@@ -62,6 +79,38 @@ create policy "Public can read active prices"
 on public.price_items for select
 to anon, authenticated
 using (active = true);
+
+-- Seller access. Sellers only see and update their own assigned items.
+drop policy if exists "Sellers can read their profile" on public.sellers;
+create policy "Sellers can read their profile"
+on public.sellers for select
+to authenticated
+using (id = auth.uid() and verified = true);
+
+drop policy if exists "Sellers can read own prices" on public.price_items;
+create policy "Sellers can read own prices"
+on public.price_items for select
+to authenticated
+using (seller_id = auth.uid());
+
+drop policy if exists "Sellers can update own prices" on public.price_items;
+create policy "Sellers can update own prices"
+on public.price_items for update
+to authenticated
+using (
+  seller_id = auth.uid()
+  and exists (
+    select 1 from public.sellers
+    where id = auth.uid() and verified = true
+  )
+)
+with check (
+  seller_id = auth.uid()
+  and exists (
+    select 1 from public.sellers
+    where id = auth.uid() and verified = true
+  )
+);
 
 -- Admin write access, based on the JWT's app_metadata.role claim.
 drop policy if exists "Admins can manage markets" on public.markets;
@@ -84,12 +133,21 @@ to authenticated
 using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
 with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
+drop policy if exists "Admins can manage sellers" on public.sellers;
+create policy "Admins can manage sellers"
+on public.sellers for all
+to authenticated
+using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
+with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+
 -- Explicit table privileges. Supabase does not always grant these to tables
 -- created from the SQL Editor, and RLS policies alone are not sufficient.
 grant select on public.markets to anon, authenticated;
 grant select on public.price_items to anon, authenticated;
+grant select on public.sellers to authenticated;
 grant insert, update, delete on public.markets to authenticated;
 grant insert, update, delete on public.price_items to authenticated;
+grant update on public.sellers to authenticated;
 
 -- Seed the six markets that the site starts with.
 insert into public.markets (id, name, detail, sort_order) values
@@ -134,6 +192,11 @@ on conflict (id) do nothing;
 --
 -- 3. Sign out and sign in again so the new JWT includes the role.
 -- 4. Open /admin on the deployed Next.js app.
+--
+-- Seller setup:
+-- 1. Run web/supabase/seller-user.sql with a seller email, password and name.
+-- 2. Assign items to that seller from the Owner field in /admin.
+-- 3. The seller signs in at /seller and can edit only assigned items.
 
 -- Refresh PostgREST's schema cache so newly created tables appear in the API
 -- immediately, even if the dashboard cached an older version of the schema.

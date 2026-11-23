@@ -1,4 +1,4 @@
-import type { AdminMarket, AdminPriceItem } from "@/lib/admin-types";
+import type { AdminMarket, AdminPriceItem, AdminSeller } from "@/lib/admin-types";
 import { CATEGORY_NAMES } from "@/lib/prices";
 import { createClient } from "@/lib/supabase/server";
 
@@ -9,11 +9,19 @@ type MarketRow = {
   sort_order: number | null;
 };
 
+type SellerRow = {
+  id: string;
+  email: string;
+  name: string | null;
+  verified: boolean;
+};
+
 type PriceRow = {
   id: string;
   name: string;
   category: string;
   market_id: string;
+  seller_id: string | null;
   unit: string;
   price: number | string;
   change: number | string;
@@ -25,6 +33,7 @@ type PriceRow = {
 
 export type AdminData = {
   markets: AdminMarket[];
+  sellers: AdminSeller[];
   items: AdminPriceItem[];
   error: string | null;
 };
@@ -44,27 +53,41 @@ function toCategory(value: unknown): AdminPriceItem["category"] {
 export async function getAdminData(): Promise<AdminData> {
   const supabase = await createClient();
 
-  const [marketsResult, itemsResult] = await Promise.all([
+  const [marketsResult, sellersResult, itemsResult] = await Promise.all([
     supabase
       .from("markets")
       .select("id,name,detail,sort_order")
       .order("sort_order", { ascending: true }),
     supabase
+      .from("sellers")
+      .select("id,email,name,verified")
+      .order("email", { ascending: true }),
+    supabase
       .from("price_items")
       .select(
-        "id,name,category,market_id,unit,price,change,history,active,sort_order,updated_at"
+        "id,name,category,market_id,seller_id,unit,price,change,history,active,sort_order,updated_at"
       )
       .order("sort_order", { ascending: true })
   ]);
 
   const error =
-    marketsResult.error?.message ?? itemsResult.error?.message ?? null;
+    marketsResult.error?.message ??
+    sellersResult.error?.message ??
+    itemsResult.error?.message ??
+    null;
 
   const markets = ((marketsResult.data ?? []) as MarketRow[]).map((row) => ({
     id: String(row.id),
     name: String(row.name),
     detail: String(row.detail ?? ""),
     sort_order: toNumber(row.sort_order)
+  }));
+
+  const sellers = ((sellersResult.data ?? []) as SellerRow[]).map((row) => ({
+    id: String(row.id),
+    email: String(row.email),
+    name: String(row.name || row.email.split("@")[0] || "Seller"),
+    verified: Boolean(row.verified)
   }));
 
   const items = ((itemsResult.data ?? []) as PriceRow[]).map((row) => {
@@ -78,6 +101,7 @@ export async function getAdminData(): Promise<AdminData> {
       name: String(row.name),
       category: toCategory(row.category),
       market_id: String(row.market_id),
+      seller_id: row.seller_id ? String(row.seller_id) : null,
       unit: String(row.unit),
       price,
       change: toNumber(row.change),
@@ -88,5 +112,5 @@ export async function getAdminData(): Promise<AdminData> {
     };
   });
 
-  return { markets, items, error };
+  return { markets, sellers, items, error };
 }

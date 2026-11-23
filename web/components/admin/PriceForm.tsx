@@ -1,17 +1,18 @@
 "use client";
 
 import { savePrice } from "@/app/admin/actions";
-import type { AdminMarket, AdminPriceItem } from "@/lib/admin-types";
+import type { AdminMarket, AdminPriceItem, AdminSeller } from "@/lib/admin-types";
 import { CATEGORY_NAMES } from "@/lib/prices";
 import { AdminSubmit } from "./AdminSubmit";
 
 type Props = {
   markets: AdminMarket[];
+  sellers: AdminSeller[];
   item?: AdminPriceItem;
   onCancel?: () => void;
 };
 
-export function PriceForm({ markets, item, onCancel }: Props) {
+export function PriceForm({ markets, sellers, item, onCancel }: Props) {
   return (
     <form action={savePrice} className="admin-form">
       {item ? <input type="hidden" name="id" value={item.id} /> : null}
@@ -51,6 +52,22 @@ export function PriceForm({ markets, item, onCancel }: Props) {
               </option>
             ))}
           </select>
+        </label>
+
+        <label className="admin-field">
+          <span>Owner (seller)</span>
+          <select name="seller_id" defaultValue={item?.seller_id ?? ""}>
+            <option value="">Unassigned</option>
+            {sellers.map((seller) => (
+              <option key={seller.id} value={seller.id}>
+                {seller.name} · {seller.email}
+                {seller.verified ? "" : " (unverified)"}
+              </option>
+            ))}
+          </select>
+          <small className="admin-field-help">
+            Only the assigned seller can edit this item.
+          </small>
         </label>
 
         <label className="admin-field">

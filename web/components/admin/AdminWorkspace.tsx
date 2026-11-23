@@ -2,19 +2,21 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { deleteMarket, deletePrice, signOut } from "@/app/admin/actions";
-import type { AdminMarket, AdminPriceItem } from "@/lib/admin-types";
+import { deleteMarket, deletePrice, setSellerVerified, signOut } from "@/app/admin/actions";
+import type { AdminMarket, AdminPriceItem, AdminSeller } from "@/lib/admin-types";
 import { CATEGORY_NAMES } from "@/lib/prices";
+import { money, RelativeTime } from "@/components/format";
 import { Icon, type AdminIconName } from "./AdminIcons";
 import { MarketForm } from "./MarketForm";
 import { PriceForm } from "./PriceForm";
 
-type Tab = "overview" | "prices" | "markets";
+type Tab = "overview" | "prices" | "markets" | "sellers";
 type Banner = { tone: "error" | "success"; message: string } | null;
 type PendingDelete = { type: "price" | "market"; id: string; name: string } | null;
 
 type Props = {
   markets: AdminMarket[];
+  sellers: AdminSeller[];
   items: AdminPriceItem[];
   email: string;
   banner: Banner;
@@ -23,7 +25,8 @@ type Props = {
 const tabs: { id: Tab; label: string; icon: AdminIconName }[] = [
   { id: "overview", label: "Overview", icon: "grid" },
   { id: "prices", label: "Prices", icon: "tag" },
-  { id: "markets", label: "Markets", icon: "store" }
+  { id: "markets", label: "Markets", icon: "store" },
+  { id: "sellers", label: "Sellers", icon: "users" }
 ];
 
 const tabMeta: Record<Tab, { eyebrow: string; title: string; subtitle: string }> = {
@@ -41,12 +44,13 @@ const tabMeta: Record<Tab, { eyebrow: string; title: string; subtitle: string }>
     eyebrow: "Coverage",
     title: "Markets",
     subtitle: "Manage the market names and details used by the public filters and market cards."
+  },
+  sellers: {
+    eyebrow: "Team",
+    title: "Sellers",
+    subtitle: "Verify seller accounts and see which price items each seller can update."
   }
 };
-
-function money(value: number) {
-  return `₦${value.toLocaleString("en-NG")}`;
-}
 
 function userInitials(email: string) {
   const seed = email.split("@")[0] ?? "staff";
@@ -56,32 +60,6 @@ function userInitials(email: string) {
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase() ?? "")
     .join("");
-}
-
-function RelativeTime({ value }: { value: string | null }) {
-  const [label, setLabel] = useState("—");
-
-  useEffect(() => {
-    if (!value) return;
-    const time = new Date(value).getTime();
-    if (!Number.isFinite(time)) return;
-
-    const minutes = Math.max(0, Math.floor((Date.now() - time) / 60000));
-    if (minutes < 1) setLabel("Just now");
-    else if (minutes < 60) setLabel(`${minutes}m ago`);
-    else if (minutes < 1440) setLabel(`${Math.floor(minutes / 60)}h ago`);
-    else if (minutes < 10080) setLabel(`${Math.floor(minutes / 1440)}d ago`);
-    else
-      setLabel(
-        new Date(time).toLocaleDateString("en-NG", {
-          day: "2-digit",
-          month: "short",
-          timeZone: "UTC"
-        })
-      );
-  }, [value]);
-
-  return <time dateTime={value ?? undefined}>{label}</time>;
 }
 
 function EmptyState({ title, message }: { title: string; message: string }) {
@@ -96,7 +74,7 @@ function EmptyState({ title, message }: { title: string; message: string }) {
   );
 }
 
-export function AdminWorkspace({ markets, items, email, banner }: Props) {
+export function AdminWorkspace({ markets, sellers, items, email, banner }: Props) {
   const [tab, setTab] = useState<Tab>("overview");
   const [search, setSearch] = useState("");
   const [marketSearch, setMarketSearch] = useState("");
@@ -136,6 +114,14 @@ export function AdminWorkspace({ markets, items, email, banner }: Props) {
   const itemCounts = useMemo(() => {
     const counts = new Map<string, number>();
     items.forEach((item) => counts.set(item.market_id, (counts.get(item.market_id) ?? 0) + 1));
+    return counts;
+  }, [items]);
+
+  const sellerCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    items.forEach((item) => {
+      if (item.seller_id) counts.set(item.seller_id, (counts.get(item.seller_id) ?? 0) + 1);
+    });
     return counts;
   }, [items]);
 
@@ -199,7 +185,8 @@ export function AdminWorkspace({ markets, items, email, banner }: Props) {
   const navCounts: Record<Tab, number | null> = {
     overview: null,
     prices: items.length,
-    markets: markets.length
+    markets: markets.length,
+    sellers: sellers.length
   };
 
   function openAddPrice() {
@@ -276,10 +263,16 @@ export function AdminWorkspace({ markets, items, email, banner }: Props) {
               View public site
               <Icon name="external" size={14} />
             </Link>
-            <button className="button button-primary button-small" type="button" onClick={tab === "markets" ? openAddMarket : openAddPrice}>
-              <Icon name="plus" size={15} />
-              {tab === "markets" ? "Add market" : "Add price"}
-            </button>
+            {tab !== "sellers" ? (
+              <button
+                className="button button-primary button-small"
+                type="button"
+                onClick={tab === "markets" ? openAddMarket : openAddPrice}
+              >
+                <Icon name="plus" size={15} />
+                {tab === "markets" ? "Add market" : "Add price"}
+              </button>
+            ) : null}
           </div>
         </header>
 
@@ -517,7 +510,7 @@ export function AdminWorkspace({ markets, items, email, banner }: Props) {
                     <strong>New price item</strong>
                     <span>Fields marked required must be filled in.</span>
                   </div>
-                  <PriceForm markets={markets} onCancel={() => setAddPriceOpen(false)} />
+                  <PriceForm markets={markets} sellers={sellers} onCancel={() => setAddPriceOpen(false)} />
                 </div>
               ) : null}
 
@@ -588,7 +581,7 @@ export function AdminWorkspace({ markets, items, email, banner }: Props) {
                         </div>
                         {editing ? (
                           <div className="admin-row-editor">
-                            <PriceForm markets={markets} item={item} onCancel={() => setEditingPrice(null)} />
+                            <PriceForm markets={markets} sellers={sellers} item={item} onCancel={() => setEditingPrice(null)} />
                           </div>
                         ) : null}
                       </article>
@@ -708,6 +701,69 @@ export function AdminWorkspace({ markets, items, email, banner }: Props) {
               )}
             </section>
           </>
+        ) : null}
+
+        {tab === "sellers" ? (
+          <section className="admin-card-surface">
+            <header className="admin-panel-head">
+              <div>
+                <p className="eyebrow">Team</p>
+                <h2>
+                  {sellers.length} {sellers.length === 1 ? "seller" : "sellers"}
+                </h2>
+              </div>
+              <Link className="text-link" href="/seller" target="_blank" rel="noreferrer">
+                Seller portal
+                <Icon name="external" size={14} />
+              </Link>
+            </header>
+
+            {sellers.length ? (
+              <div className="admin-market-grid">
+                {sellers.map((seller) => {
+                  const assigned = sellerCounts.get(seller.id) ?? 0;
+                  return (
+                    <article className="admin-market-card" key={seller.id}>
+                      <div className="admin-market-card-head">
+                        <div>
+                          <strong>{seller.name}</strong>
+                          <small title={seller.email}>{seller.email}</small>
+                        </div>
+                        <span
+                          className={`admin-status${seller.verified ? " is-live" : ""}`}
+                        >
+                          {seller.verified ? "Verified" : "Paused"}
+                        </span>
+                      </div>
+                      <div className="admin-market-card-foot">
+                        <span>{assigned} assigned items</span>
+                        <form action={setSellerVerified}>
+                          <input type="hidden" name="id" value={seller.id} />
+                          <input
+                            type="hidden"
+                            name="verified"
+                            value={seller.verified ? "false" : "true"}
+                          />
+                          <button className="admin-link-button" type="submit">
+                            {seller.verified ? "Pause access" : "Verify seller"}
+                          </button>
+                        </form>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <EmptyState
+                title="No sellers yet"
+                message="Run web/supabase/seller-user.sql to create a seller, then assign items from the Prices tab."
+              />
+            )}
+            <p className="admin-panel-note">
+              Sellers can edit only the items assigned to them in the Prices tab. Use the Owner
+              field on each item to change or remove access.
+            </p>
+          </section>
         ) : null}
 
         <p className="admin-footer-note">
