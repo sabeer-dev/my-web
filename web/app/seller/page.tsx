@@ -23,10 +23,17 @@ type Banner = {
 
 export default async function SellerPage({ searchParams }: SellerPageProps) {
   const params = await searchParams;
+  const savedMessages: Record<string, string> = {
+    price: "Price saved. The public board will update shortly.",
+    created: "Product added. It is now live on the public board."
+  };
   const banner: Banner | null = params.error
     ? { tone: "error", message: params.error }
     : params.saved
-      ? { tone: "success", message: "Price saved." }
+      ? {
+          tone: "success",
+          message: savedMessages[params.saved] ?? "Saved. The public board will update shortly."
+        }
       : null;
 
   if (!hasSupabaseEnv()) {

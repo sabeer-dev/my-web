@@ -6,6 +6,7 @@ import { signOut } from "@/app/seller/actions";
 import { Icon } from "@/components/admin/AdminIcons";
 import { money, RelativeTime } from "@/components/format";
 import type { AdminMarket, AdminPriceItem, SellerProfile } from "@/lib/admin-types";
+import { SellerAddForm } from "./SellerAddForm";
 import { SellerPriceForm } from "./SellerPriceForm";
 
 type Banner = { tone: "error" | "success"; message: string } | null;
@@ -32,6 +33,7 @@ function EmptyState({ title, message }: { title: string; message: string }) {
 export function SellerWorkspace({ seller, markets, items, banner }: Props) {
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
   useEffect(() => {
@@ -42,6 +44,14 @@ export function SellerWorkspace({ seller, markets, items, banner }: Props) {
     () => new Map(markets.map((market) => [market.id, market.name])),
     [markets]
   );
+
+  const defaultMarketId =
+    (seller.requestedMarketId && marketNames.has(seller.requestedMarketId)
+      ? seller.requestedMarketId
+      : null) ??
+    markets[0]?.id ??
+    "";
+  const nextSortOrder = items.reduce((max, item) => Math.max(max, item.sort_order), 0) + 1;
 
   const filteredItems = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -115,11 +125,19 @@ export function SellerWorkspace({ seller, markets, items, banner }: Props) {
             <p className="eyebrow">Seller portal</p>
             <h1>My prices</h1>
             <p className="admin-lede">
-              Update the price, unit, and trend for your assigned items. Save to publish to the
+              Add your own products and update prices, units, and trends. Save to publish to the
               public board.
             </p>
           </div>
           <div className="admin-top-actions">
+            <button
+              className="button button-primary button-small"
+              type="button"
+              onClick={() => setAddOpen((open) => !open)}
+            >
+              <Icon name="plus" size={15} />
+              {addOpen ? "Close form" : "Add product"}
+            </button>
             <Link className="text-link" href="/" target="_blank" rel="noreferrer">
               View public site
               <Icon name="external" size={14} />
@@ -137,11 +155,7 @@ export function SellerWorkspace({ seller, markets, items, banner }: Props) {
         {banner && !bannerDismissed ? (
           <div className={`admin-banner is-${banner.tone}`} role="status">
             <Icon name={banner.tone === "success" ? "check" : "alert"} size={16} />
-            <span>
-              {banner.tone === "success"
-                ? "Price saved. The public board will refresh shortly."
-                : banner.message}
-            </span>
+            <span>{banner.message}</span>
             <button
               type="button"
               aria-label="Dismiss message"
@@ -159,7 +173,7 @@ export function SellerWorkspace({ seller, markets, items, banner }: Props) {
             </span>
             <span className="admin-stat-label">My items</span>
             <strong className="admin-stat-value">{items.length}</strong>
-            <span className="admin-stat-foot">Assigned by the Sabeer Market team</span>
+            <span className="admin-stat-foot">Added by you or assigned by the team</span>
           </article>
           <article className="admin-stat">
             <span className="admin-stat-icon is-live">
@@ -207,13 +221,28 @@ export function SellerWorkspace({ seller, markets, items, banner }: Props) {
         <section className="admin-card-surface">
           <header className="admin-panel-head">
             <div>
-              <p className="eyebrow">Assigned items</p>
+              <p className="eyebrow">My items</p>
               <h2>
                 {filteredItems.length} {filteredItems.length === 1 ? "item" : "items"}
               </h2>
             </div>
             <span className="admin-status is-live">Verified account</span>
           </header>
+
+          {addOpen ? (
+            <div className="admin-form-panel">
+              <div className="admin-form-panel-head">
+                <strong>New product</strong>
+                <span>Your product appears on the public board after saving.</span>
+              </div>
+              <SellerAddForm
+                markets={markets}
+                defaultMarketId={defaultMarketId}
+                nextSortOrder={nextSortOrder}
+                onCancel={() => setAddOpen(false)}
+              />
+            </div>
+          ) : null}
 
           {filteredItems.length ? (
             <div className="admin-list">
@@ -282,14 +311,14 @@ export function SellerWorkspace({ seller, markets, items, banner }: Props) {
             </div>
           ) : (
             <EmptyState
-              title="No items assigned"
-              message="Contact the Sabeer Market team if you should be managing prices here."
+              title="No products yet"
+              message="Use Add product to publish your first item, or ask the Sabeer Market team to assign one."
             />
           )}
         </section>
 
         <p className="admin-footer-note">
-          Sabeer Market · Seller portal · You can edit only the items assigned to your account.
+          Sabeer Market · Seller portal · You can add products and edit only the items on this page.
         </p>
       </div>
     </div>

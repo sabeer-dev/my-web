@@ -3,8 +3,8 @@
 -- Run this in Supabase Dashboard > SQL Editor.
 -- Public visitors can read the board. Only signed-in users whose
 -- app_metadata.role is "admin" can add, edit or delete rows. Verified
--- sellers with role "seller" can update only the price items assigned to
--- them through price_items.seller_id.
+-- sellers with role "seller" can add their own products and update only
+-- the price items assigned to them through price_items.seller_id.
 --
 -- The script is safe to run more than once. Existing prices and markets
 -- are not overwritten because the seed inserts use ON CONFLICT DO NOTHING.
@@ -155,6 +155,18 @@ on public.price_items for select
 to authenticated
 using (seller_id = auth.uid());
 
+drop policy if exists "Sellers can add own prices" on public.price_items;
+create policy "Sellers can add own prices"
+on public.price_items for insert
+to authenticated
+with check (
+  seller_id = auth.uid()
+  and exists (
+    select 1 from public.sellers
+    where id = auth.uid() and verified = true
+  )
+);
+
 drop policy if exists "Sellers can update own prices" on public.price_items;
 create policy "Sellers can update own prices"
 on public.price_items for update
@@ -259,6 +271,7 @@ on conflict (id) do nothing;
 -- 1. Run web/supabase/seller-user.sql with a seller email, password and name.
 -- 2. Assign items to that seller from the Owner field in /admin.
 -- 3. The seller signs in at /seller and can edit only assigned items.
+-- 4. Verified sellers can also add their own products from Add product.
 
 -- Refresh PostgREST's schema cache so newly created tables appear in the API
 -- immediately, even if the dashboard cached an older version of the schema.

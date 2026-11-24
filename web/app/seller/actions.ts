@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { CATEGORY_NAMES } from "@/lib/prices";
 import { createClient } from "@/lib/supabase/server";
 
 export type LoginState = {
@@ -26,6 +27,19 @@ function numberValue(formData: FormData, key: string, fallback = 0) {
 
 function integerValue(formData: FormData, key: string, fallback = 0) {
   return Math.round(numberValue(formData, key, fallback));
+}
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function categoryValue(value: string) {
+  return (CATEGORY_NAMES as readonly string[]).includes(value)
+    ? (value as (typeof CATEGORY_NAMES)[number])
+    : "Grains";
 }
 
 function parseHistory(value: string, price: number) {
@@ -59,7 +73,7 @@ async function requireSeller() {
     redirect("/seller?error=Your%20seller%20account%20is%20not%20verified%20yet.");
   }
 
-  return supabase;
+  return { supabase, user };
 }
 
 export async function signIn(
@@ -133,7 +147,7 @@ export async function registerSeller(
 }
 
 export async function saveOwnPrice(formData: FormData) {
-  const supabase = await requireSeller();
+  const { supabase } = await requireSeller();
   const id = text(formData, "id");
 
   if (!id) redirect("/seller?error=Missing%20item.");
@@ -161,4 +175,50 @@ export async function saveOwnPrice(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/seller");
   redirect("/seller?saved=price");
+}
+
+export async function addOwnPrice(formData: FormData) {
+  const { supabase, user } = await requireSeller();
+  const name = text(formData, "name");
+
+  if (!name) redirect("/seller?error=Product%20name%20is%20required.");
+
+  const marketId = text(formData, "market_id");
+  if (!marketId) redirect("/seller?error=Choose%20a%20market.");
+
+  const { data: market } = await supabase
+    .from("markets")
+    .select("id")
+    .eq("id", marketId)
+    .maybeSingle();
+  if (!market) redirect("/seller?error=Choose%20a%20valid%20market.");
+
+  const price = Math.max(0, integerValue(formData, "price"));
+  const change = Math.max(-999.9, Math.min(999.9, numberValue(formData, "change")));
+  const id = `seller-${slugify(name) || "item"}-${Date.now().toString(36)}-${Math.random()
+    .toString(36)
+    .slice(2, 6)}`;
+
+  const payload = {
+    id,
+    name,
+    category: categoryValue(text(formData, "category")),
+    market_id: marketId,
+    seller_id: user.id,
+    unit: text(formData, "unit") || "1 unit",
+    price,
+    change,
+    history: parseHistory(text(formData, "history"), price),
+    active: formData.get("active") === "on",
+    sort_order: integerValue(formData, "sort_order")
+  };
+
+  // RLS requires the row to belong to the verified seller creating it.
+  const { error } = await supabase.from("price_items").insert(payload);
+
+  if (error) redirect(`/seller?error=${encodeURIComponent(error.message)}`);
+
+  revalidatePath("/");
+  revalidatePath("/seller");
+  redirect("/seller?saved=created");
 }
